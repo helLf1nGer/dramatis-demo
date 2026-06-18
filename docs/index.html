@@ -74,6 +74,25 @@
 
   footer{border-top:1px solid var(--line);padding:34px 0 60px;color:var(--mut);font-size:14px;text-align:center}
   .note{color:var(--mut);font-size:12.5px;margin-top:18px;font-style:italic}
+
+  /* production timeline */
+  .tl{position:relative;margin:24px 0 0;padding-left:34px}
+  .tl::before{content:"";position:absolute;left:11px;top:8px;bottom:14px;width:2px;
+    background:linear-gradient(var(--gold),rgba(216,166,87,.15))}
+  .stage{position:relative;margin:0 0 24px}
+  .stage::before{content:attr(data-n);position:absolute;left:-34px;top:-2px;width:24px;height:24px;border-radius:50%;
+    background:var(--panel2);border:1px solid var(--gold);color:var(--gold2);font:600 12px/23px Georgia,serif;text-align:center}
+  .stage .role{color:var(--gold);font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;font-family:ui-monospace,Menlo,Consolas,monospace}
+  .stage h3{font-size:18px;margin:3px 0 0}
+  .stage p{margin:6px 0 0;color:var(--mut);font-size:14.5px}
+  .agents{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px}
+  .agent{flex:1;min-width:160px;background:#11141b;border:1px solid var(--line);border-radius:10px;padding:11px 13px}
+  .agent b{color:var(--gold2);font-size:13px;display:block;margin-bottom:2px}
+  .agent span{color:var(--mut);font-size:12.5px}
+  .delta{display:inline-flex;align-items:center;gap:7px;background:#11141b;border:1px solid var(--line);
+    border-radius:8px;padding:6px 11px;margin:10px 8px 0 0;font-size:13px}
+  .delta .lbl{color:var(--mut);font-size:12px}
+  .delta .bf{color:#caa56a}.delta .af{color:var(--good);font-weight:600}
 </style>
 </head>
 <body>
@@ -123,6 +142,86 @@
   </div>
 </section>
 
+<!-- HOW IT WAS MADE -->
+<section id="how">
+  <div class="wrap">
+    <p class="eyebrow">How the studio made it</p>
+    <h2>Not a TTS call — a Director running a session</h2>
+    <p class="desc">Everything below is what the AI Director <em>actually did</em> to produce the Marley
+      piece above: 166 reasoning steps over typed tools, specialist sub-agents, and an observe-then-repair
+      loop. No human edits.</p>
+
+    <div class="tl">
+      <div class="stage" data-n="1">
+        <span class="role">director · analyze_text</span>
+        <h3>Read the manuscript, found its shape</h3>
+        <p>Broke the 301-word passage into <strong>four dramatic waves</strong> — the knocker becoming a
+          face, the ascent through empty rooms, the bells &amp; the rising chain, and the confrontation —
+          across 20 lines and 3 speaking parts.</p>
+      </div>
+
+      <div class="stage" data-n="2">
+        <span class="role">audition_voice → evaluate_audition → cast_voice</span>
+        <h3>Auditioned 9 voices, cast a 3-register ensemble</h3>
+        <p>Sampled candidate voices for each role, had every take evaluated for character fit and ensemble
+          contrast, then cast for a deliberate clash of registers — high, mid, deep. The verdicts:</p>
+        <div class="cast">
+          <div class="voice"><span class="who">Scrooge → Orus</span><span class="vo">“brilliantly high, thin and dry”</span></div>
+          <div class="voice"><span class="who">Marley → Algenib</span><span class="vo">“weary, sepulchral… tolling-bell weight”</span></div>
+          <div class="voice"><span class="who">Narrator → Charon</span><span class="vo">“warm fireside Dickensian storyteller”</span></div>
+        </div>
+      </div>
+
+      <div class="stage" data-n="3">
+        <span class="role">set_audio_treatment → synthesize_batch</span>
+        <h3>Directed the performance</h3>
+        <p>Gave each character a tailored treatment — Marley a genuinely supernatural reverb + pitch-drop,
+          the narrator a warm polish — then performed all <strong>19 line-level stems</strong>.</p>
+      </div>
+
+      <div class="stage" data-n="4">
+        <span class="role">dispatch_worker ×3 · in parallel</span>
+        <h3>Handed off to a review crew — all at once</h3>
+        <p>Dispatched three specialists concurrently, each its own sub-agent with its own tools:</p>
+        <div class="agents">
+          <div class="agent"><b>QA engineer</b><span>Transcribes every line back, measures pacing + dialogue masking.</span></div>
+          <div class="agent"><b>Creative dramaturg</b><span>“Scrooge's arc perfectly realized… the register clash superb.”</span></div>
+          <div class="agent"><b>Sound designer</b><span>Builds the four-scene cinematic soundscape.</span></div>
+        </div>
+      </div>
+
+      <div class="stage" data-n="5">
+        <span class="role">observe → repair → re-verify</span>
+        <h3>Caught its own mistakes and fixed them</h3>
+        <p>QA transcribed the rendered audio back, found genuine flubs and a narrator take that drifted
+          sharp, re-took just those lines, and re-checked — distinguishing real defects from false alarms
+          by ear:</p>
+        <div>
+          <span class="delta"><span class="lbl">transcript</span><span class="bf">86.5%</span>→<span class="af">99.7%</span></span>
+          <span class="delta"><span class="lbl">voice consistency</span><span class="bf">0/2</span>→<span class="af">2/3</span></span>
+          <span class="delta"><span class="lbl">dialogue masking</span><span class="bf">−4.4&nbsp;dB</span>→<span class="af">clear</span></span>
+        </div>
+      </div>
+
+      <div class="stage" data-n="6">
+        <span class="role">design_soundscape → mix_chapter → export</span>
+        <h3>Sound-designed and mastered</h3>
+        <p>Placed <strong>16 cues</strong> across the four waves — bitter wind &amp; a distant bell → the
+          door-slam echoing through an empty house → one bell swelling into <em>every</em> bell, dragging
+          chains, the cellar-door boom → spectral resonance and a sepulchral cello. Mixed <strong>42
+          layers</strong> at a radio-drama profile; two independent mix reviews returned “release-ready.”</p>
+      </div>
+    </div>
+
+    <div class="statline" style="margin-top:24px">
+      <div class="s"><b>166</b><span>Director steps</span></div>
+      <div class="s"><b>9→3</b><span>voices auditioned → cast</span></div>
+      <div class="s"><b>3</b><span>specialist agents</span></div>
+      <div class="s"><b>42</b><span>mixed layers</span></div>
+    </div>
+  </div>
+</section>
+
 <!-- GALLERY -->
 <section id="gallery">
   <div class="wrap">
@@ -165,22 +264,6 @@
       </div>
       <p class="note">A feature-length original — proof the pipeline holds a consistent cast across an
         entire book, not just a clip.</p>
-    </div>
-  </div>
-</section>
-
-<!-- HOW IT WORKS -->
-<section id="how">
-  <div class="wrap">
-    <p class="eyebrow">Under the hood</p>
-    <h2>How a page becomes a performance</h2>
-    <p class="desc">A Director LLM runs a reasoning loop over typed tools — no generic “write a file”
-      escape hatch, every action is a checked operation on the production.</p>
-    <div class="steps">
-      <div class="step"><b>Read &amp; cast</b><span>Parse the manuscript, assign a distinct voice + accent per character.</span></div>
-      <div class="step"><b>Sound-design</b><span>Place ambience and SFX cues against the dialogue.</span></div>
-      <div class="step"><b>Perform</b><span>Synthesize every line; QA the audio; re-take what misses.</span></div>
-      <div class="step"><b>Master</b><span>Mix stems, balance levels, export the finished chapter.</span></div>
     </div>
   </div>
 </section>
