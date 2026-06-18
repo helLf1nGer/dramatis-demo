@@ -307,7 +307,7 @@
     <span class="tag">Agentic audio production</span>
     <h1>Dramatis</h1>
     <p class="lead">Raw text in. A full-cast, sound-designed, mastered audiobook out.</p>
-    <p class="sub">An AI <em>Director</em> reads the manuscript, casts a distinct voice per character,
+    <p class="sub">An AI <em>Director</em> reads the manuscript, casts a voice for every character,
       designs the soundscape, performs every line, and mixes the master — autonomously, or with a
       human in the loop. Everything below is a <strong>real, unedited output</strong> of the pipeline.</p>
   </div>
@@ -334,7 +334,7 @@
         <span class="sp">Marley's Ghost:</span> “I wear the chain I forged in life…”
       </blockquote>
 
-      <div class="players"><audio controls preload="none" src="audio/marley.mp3"></audio></div>
+      <div class="players"><audio controls preload="none" src="audio/marley.mp3" aria-label="A Christmas Carol — Marley's Ghost (full production audio)"></audio></div>
       <div class="vc-cast">
         <div class="vc-card" tabindex="0" role="button" aria-expanded="false" data-prov="gemini">
           <div class="vc-head"><span class="vc-who">Narrator · Charon</span><span class="vc-chip">Gemini TTS</span></div>
@@ -378,7 +378,7 @@
     <h2>Not a TTS call — a Director running a session</h2>
     <p class="desc">Everything below is what the AI Director <em>actually did</em> to produce the Marley
       piece above: 166 reasoning steps over typed tools, specialist sub-agents, and an observe-then-repair
-      loop. No human edits.</p>
+      loop. No manual audio editing.</p>
 
 <div class="replay" id="replay">
       <div class="replay-bar">
@@ -460,9 +460,9 @@
           <span class="rp-prod-tag">producer</span>
           <span class="rp-prod-msg">I checked s004_l014.wav. It's fine, continue.</span>
         </div>
-        <div class="ev think" data-step="12">Trusting the human ear over the metric. Dropping the phantom defect, fixing only the two real ones.</div>
+        <div class="ev think" data-step="12">Trusting the human ear over the metric. Dropping the phantom defect, re-cutting the genuine misses: two garbled lines, a pitch-drifted take, and the opening.</div>
         <div class="ev call ok" data-step="13">
-          <span class="tr-sig"><span class="tr-fn">re_synthesize</span><span class="tr-args">(targets=<span class="tr-num">2</span>)</span> <span class="tr-pipe">|</span> <span class="tr-fn">verify</span></span>
+          <span class="tr-sig"><span class="tr-fn">re_synthesize</span><span class="tr-args">(targets=<span class="tr-num">5</span>)</span> <span class="tr-pipe">|</span> <span class="tr-fn">verify</span></span>
           <span class="tr-ret"><span class="tr-ok">ok</span> transcript 86.5% &rarr; <b>99.7%</b> &middot; narrator back in register</span>
         </div>
 
@@ -488,7 +488,7 @@
         </div>
         <div class="ev call ok" data-step="19">
           <span class="tr-sig"><span class="tr-fn">export_chapter</span><span class="tr-args">()</span></span>
-          <span class="tr-ret"><span class="tr-ok">done</span> ch01.mp3 &middot; 3:19 &middot; verdict: <span class="tr-q">"release-ready"</span></span>
+          <span class="tr-ret"><span class="tr-ok">done</span> ch01.mp3 &middot; 3:19 &middot; mix review: <span class="tr-ok" style="color:var(--gold2)">approve_with_notes</span> <span class="tr-q">"release-ready"</span></span>
         </div>
       </div>
     </div>
@@ -590,7 +590,7 @@
         The giant laughed, wine black in his beard.<br>
         <span class="sp">Polyphemus:</span> “Then Nobody shall be eaten last. That is my gift to you.”
       </blockquote>
-      <div class="players"><audio controls preload="none" src="audio/odyssey_polyphemus.mp3"></audio></div>
+      <div class="players"><audio controls preload="none" src="audio/odyssey_polyphemus.mp3" aria-label="The Odyssey — Cave of Polyphemus (audio)"></audio></div>
       <div class="vc-cast">
         <div class="vc-card" tabindex="0" role="button" aria-expanded="false" data-prov="gemini">
           <div class="vc-head"><span class="vc-who">Odysseus · Fenrir</span><span class="vc-chip">Gemini TTS</span></div>
@@ -630,11 +630,11 @@
         <span class="sp">Princess Alexis:</span> “That’s the same thing your Master threatened, the first time we tried.”<br>
         <span class="sp">Dominic:</span> “What can I say? I learned from the best.”
       </blockquote>
-      <div class="players"><audio controls preload="none" src="audio/wdh_ch42_highlight.mp3"></audio></div>
+      <div class="players"><audio controls preload="none" src="audio/wdh_ch42_highlight.mp3" aria-label="World Dragon's Heir — chapter 42 highlight (audio)"></audio></div>
       <div class="statline">
         <div class="s"><b>43</b><span>chapters produced</span></div>
-        <div class="s"><b>76</b><span>distinct character voices</span></div>
-        <div class="s"><b>4</b><span>TTS providers, one cast</span></div>
+        <div class="s"><b>76</b><span>speaking roles</span></div>
+        <div class="s"><b>4</b><span>TTS engines, one cast</span></div>
       </div>
       <div class="vc-cast vc-cast--wide">
         <div class="vc-card" tabindex="0" role="button" aria-expanded="false" data-prov="chirp">
@@ -670,7 +670,7 @@
           </div></div>
         </div>
       </div>
-      <p class="note"><span class="rp-tk" style="color:var(--gold2);opacity:1;border-color:#3a3320">research preview</span> A feature-length original (46 chapters, 76 voices) from an <strong>earlier pipeline</strong> — included to show scale and multi-provider casting. Fidelity sits below the <em>Marley</em> showcase above; quality has moved fast since.</p>
+      <p class="note"><span class="rp-tk" style="color:var(--gold2);opacity:1;border-color:#3a3320">research preview</span> A feature-length original (43 chapters, 76 speaking roles) from an <strong>earlier pipeline</strong> — included to show scale and multi-provider casting. Fidelity sits below the <em>Marley</em> showcase above; quality has moved fast since.</p>
     </div>
   </div>
 </section>
@@ -824,6 +824,7 @@
     });
     // keyboard: Enter/Space toggles, Esc closes
     card.addEventListener('keydown', function(e){
+      if(e.target && e.target.closest && e.target.closest('.vc-play')) return; // let the play button handle itself
       var k = e.key;
       if(k === 'Enter' || k === ' ' || k === 'Spacebar'){
         e.preventDefault(); toggle(card);
@@ -831,9 +832,11 @@
         if(card.classList.contains('is-open')){ close(card); }
       }
     });
-    // blur via keyboard navigation: collapse the tap-state so it doesn't linger
-    card.addEventListener('blur', function(){
-      // keep :focus-within behaviour to CSS; only clear the explicit tap flag
+    // keyboard focus visually reveals the drawer (CSS :focus-within); keep aria in sync
+    card.addEventListener('focus', function(){ card.setAttribute('aria-expanded','true'); });
+    // collapse when focus truly leaves the card (not when it moves into the nested play button)
+    card.addEventListener('blur', function(e){
+      if(e.relatedTarget && card.contains(e.relatedTarget)) return;
       close(card);
     });
   });

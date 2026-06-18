@@ -139,6 +139,7 @@
     });
     // keyboard: Enter/Space toggles, Esc closes
     card.addEventListener('keydown', function(e){
+      if(e.target && e.target.closest && e.target.closest('.vc-play')) return; // let the play button handle itself
       var k = e.key;
       if(k === 'Enter' || k === ' ' || k === 'Spacebar'){
         e.preventDefault(); toggle(card);
@@ -146,9 +147,11 @@
         if(card.classList.contains('is-open')){ close(card); }
       }
     });
-    // blur via keyboard navigation: collapse the tap-state so it doesn't linger
-    card.addEventListener('blur', function(){
-      // keep :focus-within behaviour to CSS; only clear the explicit tap flag
+    // keyboard focus visually reveals the drawer (CSS :focus-within); keep aria in sync
+    card.addEventListener('focus', function(){ card.setAttribute('aria-expanded','true'); });
+    // collapse when focus truly leaves the card (not when it moves into the nested play button)
+    card.addEventListener('blur', function(e){
+      if(e.relatedTarget && card.contains(e.relatedTarget)) return;
       close(card);
     });
   });
