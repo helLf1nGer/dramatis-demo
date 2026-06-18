@@ -85,10 +85,9 @@
   .rb-play{background:var(--panel2);color:var(--gold2);border:1px solid var(--line);border-radius:7px;
     padding:5px 12px;font:600 12px/1 ui-monospace,Menlo,Consolas,monospace;cursor:pointer}
   .rb-play:hover{border-color:var(--gold)}
-  .replay-body{padding:15px 16px;min-height:312px;max-height:392px;overflow-y:auto;scroll-behavior:smooth;
-    font:13.5px/1.5 ui-monospace,Menlo,Consolas,monospace}
-  .ev{margin:0 0 11px;transition:opacity .45s ease,transform .45s ease}
-  .replay.armed .ev{opacity:0;transform:translateY(8px)}
+  .replay-body{padding:16px 18px;font:13.5px/1.55 ui-monospace,Menlo,Consolas,monospace}
+  .ev{margin:0 0 12px;transition:opacity .5s cubic-bezier(.22,.7,.2,1),transform .5s cubic-bezier(.22,.7,.2,1)}
+  .replay.armed .ev{opacity:0;transform:translateY(10px)}
   .replay.armed .ev.show{opacity:1;transform:none}
   .ev.think{color:#cfd3da;font-style:italic;font-family:Georgia,"Times New Roman",serif;font-size:14.5px}
   .ev.think::before{content:"› director  ";font:normal 11px/1 ui-monospace,Menlo,Consolas,monospace;color:var(--gold)}
@@ -264,7 +263,7 @@
   var evs = [].slice.call(body.querySelectorAll('.ev'));
   r.classList.add('armed');               // only hide steps when JS is available
   var timers = [], playing = false;
-  function reset(){ timers.forEach(clearTimeout); timers = []; evs.forEach(function(e){ e.classList.remove('show','cur'); }); body.scrollTop = 0; }
+  function reset(){ timers.forEach(clearTimeout); timers = []; evs.forEach(function(e){ e.classList.remove('show','cur'); }); }
   function play(){
     playing = true; reset(); var d = 300;
     evs.forEach(function(e, i){
@@ -272,7 +271,6 @@
       timers.push(setTimeout(function(){
         evs.forEach(function(x){ x.classList.remove('cur'); });
         e.classList.add('show','cur');
-        body.scrollTop = body.scrollHeight;
         if(i === evs.length - 1){ setTimeout(function(){ e.classList.remove('cur'); playing = false; }, 800); }
       }, d));
       d += dur;
