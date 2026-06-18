@@ -133,6 +133,7 @@
   cards.forEach(function(card){
     // pointer: tap/click toggles (also fine on desktop; :hover already reveals)
     card.addEventListener('click', function(e){
+      if(e.target && e.target.closest && e.target.closest('.vc-play')) return; // let the play button handle itself
       e.preventDefault();
       toggle(card);
     });
@@ -160,5 +161,31 @@
   // global Esc as a fallback
   document.addEventListener('keydown', function(e){
     if(e.key === 'Escape' || e.key === 'Esc'){ cards.forEach(close); }
+  });
+})();
+
+/* ---- per-voice sample playback ---- */
+(function(){
+  var btns = [].slice.call(document.querySelectorAll('.vc-play'));
+  if(!btns.length) return;
+  var audio = null, current = null;
+  function stop(){
+    if(audio){ audio.pause(); audio = null; }
+    if(current){ current.classList.remove('playing'); current.innerHTML = '▷ hear voice'; current = null; }
+  }
+  btns.forEach(function(btn){
+    btn.addEventListener('click', function(e){
+      e.preventDefault(); e.stopPropagation();
+      var wasCurrent = (current === btn);
+      stop();
+      if(wasCurrent) return;            // second click on the same button = stop
+      audio = new Audio(btn.getAttribute('data-src'));
+      current = btn;
+      btn.classList.add('playing'); btn.innerHTML = '\u25A0 stop';
+      audio.addEventListener('ended', stop);
+      audio.addEventListener('error', stop);
+      var p = audio.play();
+      if(p && p.catch) p.catch(function(){ stop(); });
+    });
   });
 })();
