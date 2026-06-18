@@ -11,7 +11,7 @@ output** of the pipeline.
 - `docs/audio/` — produced MP3s:
   - `marley.mp3` — *A Christmas Carol*, "Marley's Ghost" (Dickens, public domain) — produced for this showcase.
   - `odyssey_polyphemus.mp3` — *The Odyssey*, Cave of Polyphemus (public domain).
-  - `wdh_ch01_highlight.mp3` — *World Dragon's Heir* (original novel) — 60s highlight from a 46-chapter production.
+  - `wdh_ch43_highlight.mp3` — *World Dragon's Heir* (original novel), ch43 "Royal Palace Dinner" — dialogue highlight from a 46-chapter production.
 
 ## Related
 - Timeline Surgeon (the agent-facing DAW) demo: https://hellf1nger.github.io/Dramatis-DAW/
