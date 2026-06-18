@@ -104,6 +104,185 @@
   .ev.show.cur::after{content:"▋";color:var(--gold);margin-left:3px;animation:blink 1s step-end infinite}
   @keyframes blink{50%{opacity:0}}
   @media (prefers-reduced-motion: reduce){.replay.armed .ev{opacity:1;transform:none}}
+
+  /* ===== voice cards ===== */
+/* ===== interactive voice cards (vc-) — additive, namespaced ===== */
+.vc-cast{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;margin-top:14px}
+.vc-cast--wide{grid-template-columns:repeat(auto-fill,minmax(190px,1fr));margin-top:12px}
+
+.vc-card{position:relative;display:block;width:100%;text-align:left;background:#11141b;
+  border:1px solid var(--line);border-radius:10px;padding:11px 13px;cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+  transition:border-color .28s cubic-bezier(.22,.7,.2,1),background .28s cubic-bezier(.22,.7,.2,1),
+    transform .28s cubic-bezier(.22,.7,.2,1),box-shadow .28s cubic-bezier(.22,.7,.2,1)}
+.vc-card:hover,.vc-card:focus-visible,.vc-card.is-open{border-color:var(--gold);background:#141821;
+  box-shadow:0 8px 26px rgba(0,0,0,.34);outline:none}
+.vc-card:focus-visible{box-shadow:0 0 0 2px rgba(216,166,87,.45)}
+
+.vc-head{display:flex;align-items:baseline;justify-content:space-between;gap:8px}
+.vc-who{font-weight:600;font-size:14px;color:var(--ink)}
+.vc-voice{display:block;color:var(--mut);font-size:12.5px;margin-top:3px}
+
+/* provider chip — tint per family so the multi-provider story reads visually */
+.vc-chip{flex:none;font:600 10px/1.4 ui-monospace,Menlo,Consolas,monospace;letter-spacing:.04em;
+  text-transform:uppercase;border:1px solid var(--line);border-radius:999px;padding:2px 8px;color:var(--mut);white-space:nowrap}
+.vc-card[data-prov="gemini"] .vc-chip{color:var(--gold);border-color:#3a3320;background:rgba(216,166,87,.07)}
+.vc-card[data-prov="chirp"]  .vc-chip{color:#8fb8d6;border-color:#26323d;background:rgba(143,184,214,.08)}
+.vc-card[data-prov="eleven"] .vc-chip{color:#b79ad6;border-color:#322a3d;background:rgba(183,154,214,.09)}
+
+/* hover/tap cue — fades out once the detail is open */
+.vc-cue{display:inline;color:var(--gold);font-size:11px;letter-spacing:.02em;opacity:0;
+  transition:opacity .25s ease}
+.vc-cast > .vc-card:first-child .vc-cue{opacity:.5}
+.vc-card:hover .vc-cue,.vc-card:focus-within .vc-cue,.vc-card.is-open .vc-cue{opacity:0}
+
+/* reveal: grid 0fr->1fr never clips and animates the real height */
+.vc-detail{display:grid;grid-template-rows:0fr;
+  transition:grid-template-rows .34s cubic-bezier(.22,.7,.2,1),margin-top .34s cubic-bezier(.22,.7,.2,1);
+  margin-top:0}
+.vc-detail-i{overflow:hidden;min-height:0;opacity:0;transform:translateY(-3px);
+  transition:opacity .3s ease .04s,transform .3s cubic-bezier(.22,.7,.2,1) .04s}
+.vc-card:hover .vc-detail,.vc-card:focus-within .vc-detail,.vc-card.is-open .vc-detail{grid-template-rows:1fr;margin-top:9px}
+.vc-card:hover .vc-detail-i,.vc-card:focus-within .vc-detail-i,.vc-card.is-open .vc-detail-i{opacity:1;transform:none}
+
+.vc-for{display:block;color:#d4d0c7;font-size:12.5px;line-height:1.55;
+  padding-top:9px;border-top:1px solid var(--line)}
+.vc-id{display:block;color:var(--mut);font:11px/1.4 ui-monospace,Menlo,Consolas,monospace;margin-top:6px;word-break:break-word}
+
+@media(max-width:720px){.vc-cast,.vc-cast--wide{grid-template-columns:1fr 1fr}.vc-chip{font-size:9.5px;padding:2px 6px}}
+@media(max-width:430px){.vc-cast,.vc-cast--wide{grid-template-columns:1fr}}
+@media (prefers-reduced-motion: reduce){
+  .vc-card,.vc-detail,.vc-detail-i,.vc-cue{transition:none}
+}
+  /* ===== replay v2 ===== */
+/* ===== upgraded agent-trace replay (rp-/tr-) — additive, namespaced ===== */
+/* progress rail + phase ticker on the bar */
+.rp-phase{font:11px/1 ui-monospace,Menlo,Consolas,monospace;color:var(--gold);letter-spacing:.06em;
+  text-transform:uppercase;opacity:0;transition:opacity .4s;white-space:nowrap;margin-right:2px}
+.rp-phase.on{opacity:.9}
+.rp-rail{height:2px;background:#1a1e27;position:relative;overflow:hidden}
+.rp-rail-fill{position:absolute;inset:0 100% 0 0;background:linear-gradient(90deg,var(--gold),var(--gold2));
+  width:auto;right:auto;transition:right .5s linear;left:0;right:100%}
+.rp-rail-fill{right:100%}
+.replay.armed .rp-rail-fill{right:100%}
+
+/* generic hidden-until-shown for the new event types (mirrors .replay.armed .ev) */
+.replay.armed .ev[data-step]{opacity:0;transform:translateY(10px)}
+.replay.armed .ev[data-step].show{opacity:1;transform:none}
+
+/* PRODUCER input — right-aligned human chat bubble */
+.ev.rp-prod{display:flex;justify-content:flex-end;align-items:center;gap:9px}
+.rp-prod-tag{font:600 10px/1 ui-monospace,Menlo,Consolas,monospace;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--mut);order:2}
+.rp-prod-msg{order:1;max-width:78%;background:var(--panel2);border:1px solid var(--line);
+  border-right:3px solid var(--gold);border-radius:10px 10px 4px 10px;padding:9px 13px;
+  color:var(--ink);font:14px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+
+/* TOOL CALL — structured signature + result chip */
+.ev.call .tr-sig{display:inline-flex;flex-wrap:wrap;align-items:baseline;gap:0 4px;font:13px/1.5 ui-monospace,Menlo,Consolas,monospace}
+.tr-fn{color:var(--gold2);font-weight:600}
+.tr-args,.tr-x,.tr-arrow{color:var(--mut)}
+.tr-x{color:var(--gold)}
+.tr-check{color:var(--good);font-weight:700;margin-left:2px}
+.tr-file{color:#e6b35a;font:12px/1 ui-monospace,Menlo,Consolas,monospace;background:#13161e;border:1px solid var(--line);border-radius:5px;padding:1px 5px}
+.ev.call .tr-res{display:block;color:var(--mut);font-size:12.5px;margin-top:3px;padding-left:1px}
+.ev.call.ok{border-left-color:var(--good)}
+.ev.call.ok .tr-fn{color:#9fd3b0}
+
+/* ===== HELD PARALLEL STAGE ===== */
+.ev.rp-fan{background:#0c0f15;border:1px solid var(--line);border-radius:11px;padding:12px 13px 11px;
+  border-left:2px solid var(--gold)}
+.rp-fan-head{display:flex;align-items:center;gap:9px;margin-bottom:11px}
+.rp-fan-dot{width:9px;height:9px;border-radius:50%;background:var(--gold);flex:none}
+.ev.rp-fan.active .rp-fan-dot{animation:rp-pulse 1.2s infinite}
+@keyframes rp-pulse{0%,100%{opacity:.35;box-shadow:0 0 0 0 rgba(216,166,87,.4)}50%{opacity:1;box-shadow:0 0 0 5px rgba(216,166,87,0)}}
+.rp-fan-label{font:12.5px/1.3 ui-monospace,Menlo,Consolas,monospace;color:var(--mut)}
+.rp-fan-label b{color:var(--gold2)}
+.rp-lanes{display:grid;grid-template-columns:1fr 1fr 1fr;gap:9px}
+.rp-lane{background:#11141b;border:1px solid var(--line);border-radius:9px;padding:9px 10px;
+  border-top:2px solid #2a2f3a;transition:border-top-color .35s,box-shadow .35s}
+.rp-lane[data-lane="qa"].lit{border-top-color:#e6b35a;box-shadow:0 0 18px -8px #e6b35a}
+.rp-lane[data-lane="dram"].lit{border-top-color:var(--gold2);box-shadow:0 0 18px -8px var(--gold2)}
+.rp-lane[data-lane="snd"].lit{border-top-color:var(--good);box-shadow:0 0 18px -8px var(--good)}
+.rp-lane-top{margin-bottom:7px}
+.rp-lane-name{display:block;color:var(--gold2);font:600 12.5px/1.2 ui-monospace,Menlo,Consolas,monospace}
+.rp-lane-job{display:block;color:var(--mut);font-size:11px;margin-top:2px;line-height:1.35}
+.rp-lane-feed{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:5px}
+.rp-lane-feed li{color:#cfd3da;font:11.5px/1.4 ui-monospace,Menlo,Consolas,monospace;
+  padding-left:13px;position:relative;opacity:0;transform:translateY(5px);
+  transition:opacity .4s,transform .4s}
+.rp-lane-feed li::before{content:"";position:absolute;left:0;top:6px;width:5px;height:5px;border-radius:50%;background:#3a4150}
+.rp-lane-feed li.in{opacity:1;transform:none}
+.rp-lane-feed li.rp-warn{color:#e6b35a}.rp-lane-feed li.rp-warn::before{background:#e6b35a}
+.rp-lane-feed li.rp-good{color:var(--good)}.rp-lane-feed li.rp-good::before{background:var(--good)}
+.rp-fan-foot{margin-top:10px;min-height:16px}
+.rp-conv{font:11.5px/1 ui-monospace,Menlo,Consolas,monospace;color:var(--gold);letter-spacing:.04em;
+  opacity:0;transition:opacity .45s}
+.rp-fan-foot.show .rp-conv{opacity:.95}
+.rp-fan-foot.show .rp-conv::before{content:"› ";color:var(--gold)}
+
+/* RECOVERABILITY beat */
+.ev.rp-resume{display:flex;align-items:flex-start;gap:9px;background:#0e1622;border:1px solid #233247;
+  border-left:2px solid var(--good);border-radius:9px;padding:10px 12px}
+.rp-resume-tag{font:600 10px/1 ui-monospace,Menlo,Consolas,monospace;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--good);flex:none;margin-top:2px}
+.rp-resume-msg{color:#bcd6c8;font:12.5px/1.5 ui-monospace,Menlo,Consolas,monospace}
+.rp-resume-msg code{color:var(--gold2);background:#13161e;border:1px solid var(--line);border-radius:4px;padding:0 5px}
+.rp-resume-msg b{color:#dff0e6}
+
+/* cursor reuse on think-lines (matches existing .cur) */
+.ev[data-step].show.cur::after{content:"▋";color:var(--gold);margin-left:3px;animation:blink 1s step-end infinite}
+
+@media(max-width:720px){
+  .rp-lanes{grid-template-columns:1fr}
+  .rp-phase{display:none}
+  .rp-prod-msg{max-width:88%}
+}
+@media (prefers-reduced-motion: reduce){
+  .replay.armed .ev[data-step]{opacity:1!important;transform:none!important}
+  .rp-lane-feed li{opacity:1!important;transform:none!important}
+  .rp-conv{opacity:.95!important}
+  .rp-rail-fill{transition:none}
+  .ev.rp-fan .rp-fan-dot{animation:none}
+}
+  /* ===== system overview ===== */
+/* ===== system overview (ov-) — additive, namespaced ===== */
+.ov-pipe{list-style:none;display:flex;flex-wrap:wrap;gap:8px;align-items:center;
+  margin:0 0 24px;padding:0;font:600 11.5px/1 ui-monospace,Menlo,Consolas,monospace;
+  letter-spacing:.06em;text-transform:uppercase}
+.ov-pipe li{position:relative;color:var(--mut);background:#11141b;border:1px solid var(--line);
+  border-radius:7px;padding:7px 11px;white-space:nowrap}
+.ov-pipe li:first-child{color:var(--gold2);border-color:#34302a}
+.ov-pipe li:last-child{color:var(--good);border-color:#2f3a32}
+.ov-pipe li:not(:last-child)::after{content:"";position:absolute;right:-7px;top:50%;
+  width:6px;height:1px;background:var(--line)}
+
+.ov-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.ov-pillar{background:var(--panel);border:1px solid var(--line);border-radius:14px;
+  padding:20px 18px;transition:transform .25s ease,border-color .25s ease}
+.ov-pillar:hover{transform:translateY(-3px);border-color:#34302a}
+.ov-ico{display:inline-flex;align-items:center;justify-content:center;width:42px;height:42px;
+  border-radius:11px;background:linear-gradient(180deg,var(--panel2),#11141b);
+  border:1px solid var(--line);color:var(--gold);margin-bottom:13px}
+.ov-pillar h3{font-size:18px;margin:0 0 5px}
+.ov-pillar p{color:var(--mut);font-size:13.5px;line-height:1.55;margin:0}
+.ov-mono{font:600 12.5px/1 ui-monospace,Menlo,Consolas,monospace;color:var(--gold2)}
+.ov-soon{display:inline-block;vertical-align:middle;font:600 9.5px/1 ui-monospace,Menlo,Consolas,monospace;
+  letter-spacing:.1em;text-transform:uppercase;color:var(--mut);
+  border:1px solid var(--line);border-radius:999px;padding:3px 7px;margin-left:6px}
+
+@media(max-width:720px){
+  .ov-grid{grid-template-columns:1fr}
+}
+@media(max-width:520px){
+  .ov-pipe{font-size:10.5px;gap:6px}
+  .ov-pipe li{padding:6px 8px}
+  .ov-pipe li:not(:last-child)::after{display:none}
+}
+@media (prefers-reduced-motion: reduce){
+  .ov-pillar{transition:none}
+  .ov-pillar:hover{transform:none}
+}
 </style>
 </head>
 <body>
@@ -141,10 +320,31 @@
       </blockquote>
 
       <div class="players"><audio controls preload="none" src="audio/marley.mp3"></audio></div>
-      <div class="cast">
-        <div class="voice"><span class="who">Narrator</span><span class="vo">Charon · warm, fireside RP</span></div>
-        <div class="voice"><span class="who">Scrooge</span><span class="vo">Orus · thin, brittle, pinched</span></div>
-        <div class="voice"><span class="who">Marley's Ghost</span><span class="vo">Algenib · deep, sepulchral + reverb</span></div>
+      <div class="vc-cast">
+        <div class="vc-card" tabindex="0" role="button" aria-expanded="false" data-prov="gemini">
+          <div class="vc-head"><span class="vc-who">Narrator · Charon</span><span class="vc-chip">Gemini TTS</span></div>
+          <span class="vc-voice">warm fireside RP <span class="vc-cue" aria-hidden="true">why this voice ›</span></span>
+          <div class="vc-detail"><div class="vc-detail-i">
+            <span class="vc-for">Warm fireside Dickensian storyteller — gentle gravitas, calm amid the dread.</span>
+            <span class="vc-id">Charon · Received Pronunciation</span>
+          </div></div>
+        </div>
+        <div class="vc-card" tabindex="0" role="button" aria-expanded="false" data-prov="gemini">
+          <div class="vc-head"><span class="vc-who">Scrooge · Orus</span><span class="vc-chip">Gemini TTS</span></div>
+          <span class="vc-voice">thin, brittle, pinched</span>
+          <div class="vc-detail"><div class="vc-detail-i">
+            <span class="vc-for">High, thin, brittle and dry — the pinched, caustic miser.</span>
+            <span class="vc-id">Orus · Received Pronunciation</span>
+          </div></div>
+        </div>
+        <div class="vc-card" tabindex="0" role="button" aria-expanded="false" data-prov="gemini">
+          <div class="vc-head"><span class="vc-who">Marley's Ghost · Algenib</span><span class="vc-chip">Gemini TTS</span></div>
+          <span class="vc-voice">deep, sepulchral + reverb</span>
+          <div class="vc-detail"><div class="vc-detail-i">
+            <span class="vc-for">Deep, sepulchral ghost — each word lands like a tolling bell.</span>
+            <span class="vc-id">Algenib · Received Pronunciation</span>
+          </div></div>
+        </div>
       </div>
       <p class="note">3:19 · full radio-drama soundscape — bitter wind, a tolling bell swelling into every
         bell in the house, dragging chains, the cellar-door boom, then a sepulchral cello bed under the
@@ -162,33 +362,116 @@
       piece above: 166 reasoning steps over typed tools, specialist sub-agents, and an observe-then-repair
       loop. No human edits.</p>
 
-    <div class="replay" id="replay">
+<div class="replay" id="replay">
       <div class="replay-bar">
         <span class="rb-dots"><i></i><i></i><i></i></span>
         <span class="rb-title">dramatis · session: showcase-marley · ch01</span>
+        <span class="rp-phase" id="rpPhase" aria-live="polite"></span>
         <button class="rb-play" id="rbPlay" type="button">▶ Replay</button>
       </div>
+      <div class="rp-rail" id="rpRail" aria-hidden="true"><span class="rp-rail-fill" id="rpRailFill"></span></div>
+
       <div class="replay-body" id="rbBody">
-        <div class="ev think">A beautiful piece — slow-burn dread in four waves. Let me break it down.</div>
-        <div class="ev call"><span class="tool">analyze_text</span><span class="res">4 scenes · 20 lines · 3 speaking parts</span></div>
-        <div class="ev think">Three registers in deliberate contrast. Auditioning candidates for each role.</div>
-        <div class="ev call"><span class="tool">audition_voice ×9</span><span class="res">Scrooge · Marley · Narrator — 3 takes each</span></div>
-        <div class="ev call"><span class="tool">evaluate_audition</span><span class="res">Orus “high, thin, dry” · Algenib “weary, sepulchral” · Charon “warm storyteller”</span></div>
-        <div class="ev call"><span class="tool">cast_voice ×3</span><span class="res">ensemble locked — high / mid / deep</span></div>
-        <div class="ev call"><span class="tool">set_audio_treatment</span><span class="res">Marley → supernatural reverb + pitch-drop</span></div>
-        <div class="ev call"><span class="tool">synthesize_batch</span><span class="res">19 line-level stems performed</span></div>
-        <div class="ev think">Stems are down — hand off to the review crew, all at once.</div>
-        <div class="ev par">
-          <div class="pa"><b>qa_engineer</b><span>transcribe + masking</span></div>
-          <div class="pa"><b>creative_dramaturg</b><span>performance vs brief</span></div>
-          <div class="pa"><b>sound_designer</b><span>build soundscape</span></div>
+
+        <!-- 1 · creative brief: producer's one line -> full direction -->
+        <div class="ev rp-prod" data-step="0">
+          <span class="rp-prod-tag">producer</span>
+          <span class="rp-prod-msg">standalone &middot; cinematic &middot; supernatural</span>
         </div>
-        <div class="ev call warn"><span class="tool">qa_engineer ⚠</span><span class="res">“Much!”→“marsh” · narrator drifted +5.7 st</span></div>
-        <div class="ev call ok"><span class="tool">re-synthesize → re-verify</span><span class="res">transcript 86.5% → 99.7% · voice back in register</span></div>
-        <div class="ev call"><span class="tool">creative_dramaturg</span><span class="res">“Scrooge's arc perfectly realized… register clash superb”</span></div>
-        <div class="ev call"><span class="tool">design_soundscape</span><span class="res">16 cues · bells → chains → cellar-door boom → cello</span></div>
-        <div class="ev call"><span class="tool">mix_chapter → measure_masking</span><span class="res">42 layers · radio_drama · masking −4.4 dB → clear</span></div>
-        <div class="ev call ok"><span class="tool">export_chapter ✓</span><span class="res">ch01.mp3 · 3:19 · “release-ready”</span></div>
+        <div class="ev think" data-step="1">One line of intent — I'll turn it into a full creative brief: a three-register cast in deliberate contrast, and a four-wave soundscape of slow-burn dread.</div>
+        <div class="ev call" data-step="2">
+          <span class="tr-sig"><span class="tr-fn">analyze_text</span><span class="tr-args">(scene=&ldquo;Marley&rsquo;s Ghost&rdquo;)</span></span>
+          <span class="tr-res">4 scenes &middot; 20 lines &middot; 3 speaking parts</span>
+        </div>
+
+        <!-- 2 · casting -->
+        <div class="ev think" data-step="3">Scrooge thin and brittle, Marley deep and sepulchral, a warm fireside narrator between them. Auditioning candidates for each role.</div>
+        <div class="ev call" data-step="4">
+          <span class="tr-sig"><span class="tr-fn">audition_voice</span><span class="tr-args">(roles=3, takes=3)</span><span class="tr-x">&times;9</span></span>
+          <span class="tr-res">9 takes rendered</span>
+        </div>
+        <div class="ev call" data-step="5">
+          <span class="tr-sig"><span class="tr-fn">cast_voice</span><span class="tr-args">&times;3</span></span>
+          <span class="tr-res">Orus &ldquo;high, thin, dry&rdquo; &middot; Algenib &ldquo;weary, sepulchral&rdquo; &middot; Charon &ldquo;warm storyteller&rdquo;</span>
+        </div>
+        <div class="ev call" data-step="6">
+          <span class="tr-sig"><span class="tr-fn">set_audio_treatment</span><span class="tr-args">(role=&ldquo;Marley&rdquo;)</span></span>
+          <span class="tr-res">supernatural reverb + pitch-drop</span>
+        </div>
+        <div class="ev call" data-step="7">
+          <span class="tr-sig"><span class="tr-fn">synthesize_batch</span><span class="tr-args">(lines=19)</span></span>
+          <span class="tr-res">19 line-level stems performed</span>
+        </div>
+
+        <!-- 3 · HELD PARALLEL STAGE -->
+        <div class="ev think" data-step="8">Stems are down. Handing off to the full review crew — three specialists, all at once.</div>
+        <div class="ev rp-fan" data-step="9">
+          <div class="rp-fan-head"><span class="rp-fan-dot"></span><span class="rp-fan-label">dispatch_worker &times;3 &middot; <b id="rpFanCount">3</b> specialists running in parallel</span></div>
+          <div class="rp-lanes">
+            <div class="rp-lane" data-lane="qa">
+              <div class="rp-lane-top"><span class="rp-lane-name">qa_engineer</span><span class="rp-lane-job">transcript &middot; artifacts &middot; voice consistency</span></div>
+              <ul class="rp-lane-feed">
+                <li>transcribe 19 stems &middot; align to script</li>
+                <li class="rp-warn">&ldquo;Much!&rdquo; &rarr; &ldquo;marsh&rdquo; &middot; narrator drifted +5.7 st</li>
+                <li class="rp-warn">metallic-artifact flag on s004_l014.wav</li>
+              </ul>
+            </div>
+            <div class="rp-lane" data-lane="dram">
+              <div class="rp-lane-top"><span class="rp-lane-name">creative_dramaturg</span><span class="rp-lane-job">delivery vs. brief</span></div>
+              <ul class="rp-lane-feed">
+                <li>scoring emotional arc per line</li>
+                <li>Marley avoids all cartoonish tropes</li>
+                <li class="rp-good">register clash superb &middot; vision realized</li>
+              </ul>
+            </div>
+            <div class="rp-lane" data-lane="snd">
+              <div class="rp-lane-top"><span class="rp-lane-name">sound_designer</span><span class="rp-lane-job">ambience &middot; SFX &middot; music</span></div>
+              <ul class="rp-lane-feed">
+                <li>bitter wind bed &middot; tolling bell swell</li>
+                <li>dragging chains &middot; cellar-door boom</li>
+                <li class="rp-good">sepulchral cello under the ghost</li>
+              </ul>
+            </div>
+          </div>
+          <div class="rp-fan-foot" id="rpFanFoot"><span class="rp-conv">converging &mdash; collecting 3 results</span></div>
+        </div>
+
+        <!-- 4 · producer ear-check overrules the false flag -->
+        <div class="ev think" data-step="10">QA flags a metallic artifact on <code class="tr-file">s004_l014.wav</code>. Surfacing it to the producer before I chase a re-synth.</div>
+        <div class="ev rp-prod" data-step="11">
+          <span class="rp-prod-tag">producer</span>
+          <span class="rp-prod-msg">I checked s004_l014.wav — it&rsquo;s fine, continue</span>
+        </div>
+        <div class="ev think" data-step="12">Trusting the human ear over the metric. Dropping the phantom defect — fixing only the two real issues.</div>
+        <div class="ev call ok" data-step="13">
+          <span class="tr-sig"><span class="tr-fn">re_synthesize</span><span class="tr-args">(targets=2)</span><span class="tr-arrow">&rarr;</span><span class="tr-fn">verify</span></span>
+          <span class="tr-res">transcript 86.5% &rarr; 99.7% &middot; narrator back in register</span>
+        </div>
+
+        <!-- 5 · greenlight -> autonomous finish -->
+        <div class="ev rp-prod" data-step="14">
+          <span class="rp-prod-tag">producer</span>
+          <span class="rp-prod-msg">keep going</span>
+        </div>
+        <div class="ev think" data-step="15">Greenlit. Running soundscape, mix, and the repair loop through to a master — autonomously.</div>
+        <div class="ev call" data-step="16">
+          <span class="tr-sig"><span class="tr-fn">design_soundscape</span></span>
+          <span class="tr-res">16 cues &middot; bells &rarr; chains &rarr; cellar-door boom &rarr; cello</span>
+        </div>
+
+        <!-- 6 · recoverability beat -->
+        <div class="ev rp-resume" data-step="17">
+          <span class="rp-resume-tag">checkpoint</span>
+          <span class="rp-resume-msg">cost ceiling hit &middot; <code>--resume</code> restored messages, cost &amp; provider &mdash; zero work lost &middot; iteration <b>57&rarr;100&rarr;166</b></span>
+        </div>
+        <div class="ev call" data-step="18">
+          <span class="tr-sig"><span class="tr-fn">mix_chapter</span><span class="tr-arrow">&rarr;</span><span class="tr-fn">measure_masking</span></span>
+          <span class="tr-res">42 layers &middot; radio_drama &middot; masking &minus;4.4 dB &rarr; clear</span>
+        </div>
+        <div class="ev call ok" data-step="19">
+          <span class="tr-sig"><span class="tr-fn">export_chapter</span><span class="tr-check">&#10003;</span></span>
+          <span class="tr-res">ch01.mp3 &middot; 3:19 &middot; dramaturg verdict: &ldquo;release-ready&rdquo;</span>
+        </div>
       </div>
     </div>
 
@@ -197,6 +480,78 @@
       <div class="s"><b>9→3</b><span>voices auditioned → cast</span></div>
       <div class="s"><b>3</b><span>specialist agents</span></div>
       <div class="s"><b>42</b><span>mixed layers</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- SYSTEM OVERVIEW — place between #how and #gallery -->
+<section id="system">
+  <div class="wrap">
+    <p class="eyebrow">How Dramatis works</p>
+    <h2>A coordinated studio, not a single call</h2>
+    <p class="desc">One AI Director runs the through-line and dispatches specialist sub-agents over typed tools.
+      The shape of the system, simply shown.</p>
+
+    <!-- pipeline spine -->
+    <ol class="ov-pipe" aria-label="Production pipeline">
+      <li>Analyze</li><li>Cast</li><li>Synthesize</li><li>Process</li>
+      <li>Soundscape</li><li>QA</li><li>Mix</li><li>Export</li>
+    </ol>
+
+    <!-- five pillars -->
+    <div class="ov-grid">
+
+      <article class="ov-pillar">
+        <span class="ov-ico" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="5" r="2.4"/><circle cx="5" cy="18" r="2.4"/><circle cx="12" cy="18" r="2.4"/><circle cx="19" cy="18" r="2.4"/>
+            <path d="M12 7.4v4M12 11.4H5v4M12 11.4h7v4"/>
+          </svg>
+        </span>
+        <h3>Coordinated agents</h3>
+        <p>Director dispatches up to 10 specialist agents in parallel: dispatch, poll, collect.</p>
+      </article>
+
+      <article class="ov-pillar">
+        <span class="ov-ico" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 12a8 8 0 1 1-2.6-5.9"/><path d="M20 4v3.5h-3.5"/>
+          </svg>
+        </span>
+        <h3>Recoverable</h3>
+        <p>Crash or quit anytime. <span class="ov-mono">--resume</span> restores messages, cost, iteration, and your LLM provider.</p>
+      </article>
+
+      <article class="ov-pillar">
+        <span class="ov-ico" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 17V8a2 2 0 0 1 2-2h6l-1.6 2.6L13 11H6"/><path d="M20 7v9a2 2 0 0 1-2 2h-6l1.6-2.6L11 13h7"/>
+          </svg>
+        </span>
+        <h3>Producer &amp; Director</h3>
+        <p>You produce, the AI directs. A real conversation, not fire-and-forget.</p>
+      </article>
+
+      <article class="ov-pillar">
+        <span class="ov-ico" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 12h3l2-5 3 10 2.5-7 1.8 4H21"/>
+          </svg>
+        </span>
+        <h3>One pipeline</h3>
+        <p>Eight stages, one coordinated run — every action a checked, typed tool call.</p>
+      </article>
+
+      <article class="ov-pillar">
+        <span class="ov-ico" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M5 14a3 3 0 0 0 0 6h2v-9a5 5 0 0 1 5-5"/><path d="M19 10a3 3 0 0 1 0 6h-2V7a5 5 0 0 0-5-5"/>
+          </svg>
+        </span>
+        <h3>Hybrid layers <span class="ov-soon">sound-design</span></h3>
+        <p>Bring your own sound-design audio into the library. Voice takes: AI-synthesized today.</p>
+      </article>
+
     </div>
   </div>
 </section>
@@ -218,10 +573,31 @@
         <span class="sp">Polyphemus:</span> “Then Nobody shall be eaten last. That is my gift to you.”
       </blockquote>
       <div class="players"><audio controls preload="none" src="audio/odyssey_polyphemus.mp3"></audio></div>
-      <div class="cast">
-        <div class="voice"><span class="who">Odysseus</span><span class="vo">Fenrir · Received Pronunciation</span></div>
-        <div class="voice"><span class="who">Polyphemus</span><span class="vo">Charon · deep, guttural</span></div>
-        <div class="voice"><span class="who">Narrator</span><span class="vo">Fenrir · RP</span></div>
+      <div class="vc-cast">
+        <div class="vc-card" tabindex="0" role="button" aria-expanded="false" data-prov="gemini">
+          <div class="vc-head"><span class="vc-who">Odysseus · Fenrir</span><span class="vc-chip">Gemini TTS</span></div>
+          <span class="vc-voice">deep, gravelly baritone <span class="vc-cue" aria-hidden="true">why this voice ›</span></span>
+          <div class="vc-detail"><div class="vc-detail-i">
+            <span class="vc-for">Deep resonant baritone, gravelly — a seasoned king and survivor.</span>
+            <span class="vc-id">Fenrir · Received Pronunciation</span>
+          </div></div>
+        </div>
+        <div class="vc-card" tabindex="0" role="button" aria-expanded="false" data-prov="gemini">
+          <div class="vc-head"><span class="vc-who">Polyphemus · Charon</span><span class="vc-chip">Gemini TTS</span></div>
+          <span class="vc-voice">deep, guttural, unrefined</span>
+          <div class="vc-detail"><div class="vc-detail-i">
+            <span class="vc-for">Massive chest resonance — a force of nature, terrifyingly arrogant.</span>
+            <span class="vc-id">Charon · deep, guttural</span>
+          </div></div>
+        </div>
+        <div class="vc-card" tabindex="0" role="button" aria-expanded="false" data-prov="gemini">
+          <div class="vc-head"><span class="vc-who">Narrator · Fenrir</span><span class="vc-chip">Gemini TTS</span></div>
+          <span class="vc-voice">same voice as Odysseus</span>
+          <div class="vc-detail"><div class="vc-detail-i">
+            <span class="vc-for">The same voice as Odysseus — the hero recounting his own tale.</span>
+            <span class="vc-id">Fenrir · Received Pronunciation</span>
+          </div></div>
+        </div>
       </div>
       <p class="note">This is the exact scene our <a href="https://hellf1nger.github.io/Dramatis-DAW/">Timeline Surgeon</a>
         demo operates on — watch the studio align the giant's laugh onto the word “laughed.”</p>
@@ -237,9 +613,43 @@
       </blockquote>
       <div class="players"><audio controls preload="none" src="audio/wdh_ch43_highlight.mp3"></audio></div>
       <div class="statline">
-        <div class="s"><b>46</b><span>chapters produced</span></div>
+        <div class="s"><b>43</b><span>chapters produced</span></div>
         <div class="s"><b>76</b><span>distinct character voices</span></div>
         <div class="s"><b>4</b><span>TTS providers, one cast</span></div>
+      </div>
+      <div class="vc-cast vc-cast--wide">
+        <div class="vc-card" tabindex="0" role="button" aria-expanded="false" data-prov="chirp">
+          <div class="vc-head"><span class="vc-who">Narrator</span><span class="vc-chip">Google Chirp</span></div>
+          <span class="vc-voice">warm, intimate storyteller <span class="vc-cue" aria-hidden="true">why this voice ›</span></span>
+          <div class="vc-detail"><div class="vc-detail-i">
+            <span class="vc-for">Warm, intimate master storyteller by a fireside — the one role reserved for Chirp.</span>
+            <span class="vc-id">en-GB-Chirp3-HD-Vindemiatrix · British</span>
+          </div></div>
+        </div>
+        <div class="vc-card" tabindex="0" role="button" aria-expanded="false" data-prov="gemini">
+          <div class="vc-head"><span class="vc-who">Dominic</span><span class="vc-chip">Gemini TTS</span></div>
+          <span class="vc-voice">protagonist lead</span>
+          <div class="vc-detail"><div class="vc-detail-i">
+            <span class="vc-for">Protagonist lead voice, given palace-room reverb for the dinner scene.</span>
+            <span class="vc-id">Alnilam · neutral British</span>
+          </div></div>
+        </div>
+        <div class="vc-card" tabindex="0" role="button" aria-expanded="false" data-prov="gemini">
+          <div class="vc-head"><span class="vc-who">Pops</span><span class="vc-chip">Gemini TTS</span></div>
+          <span class="vc-voice">deep, warm elder</span>
+          <div class="vc-detail"><div class="vc-detail-i">
+            <span class="vc-for">Deep, warm elder presence anchoring the family dinner.</span>
+            <span class="vc-id">Algenib · neutral British</span>
+          </div></div>
+        </div>
+        <div class="vc-card" tabindex="0" role="button" aria-expanded="false" data-prov="eleven">
+          <div class="vc-head"><span class="vc-who">General Fox</span><span class="vc-chip">ElevenLabs</span></div>
+          <span class="vc-voice">commanding military timbre</span>
+          <div class="vc-detail"><div class="vc-detail-i">
+            <span class="vc-for">A distinct ElevenLabs timbre, used surgically to mark the commanding military general.</span>
+            <span class="vc-id">cjVigY5qzO86Huf0OWal · ElevenLabs</span>
+          </div></div>
+        </div>
       </div>
       <p class="note">A feature-length original — proof the pipeline holds a consistent cast across an
         entire book, not just a clip.</p>
@@ -256,34 +666,168 @@
 </footer>
 
 <script>
+/* ---- agent-trace replay (v2) ---- */
 (function(){
   var r = document.getElementById('replay'); if(!r) return;
   var body = document.getElementById('rbBody'); if(!body) return;
   var btn = document.getElementById('rbPlay');
-  var evs = [].slice.call(body.querySelectorAll('.ev'));
-  r.classList.add('armed');               // only hide steps when JS is available
+  var phase = document.getElementById('rpPhase');
+  var railFill = document.getElementById('rpRailFill');
+  var evs = [].slice.call(body.querySelectorAll('.ev[data-step]'));
+  if(!evs.length) return;
+
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  r.classList.add('armed'); // hide steps only when JS is present
+
+  // phase label per step index (the real pipeline stages)
+  var phases = ['brief','brief','analyze','cast','cast','cast','cast','synth','review',
+                'review','review','review','review','review','mix','mix','mix','resume','mix','export'];
+  // per-step dwell (ms) before advancing; the fan stage holds long
+  var dwell = function(el){
+    if(el.classList.contains('rp-fan')) return 6200;
+    if(el.classList.contains('rp-prod')) return 1700;
+    if(el.classList.contains('rp-resume')) return 2400;
+    if(el.classList.contains('think')) return 1500;
+    return 1250;
+  };
+
   var timers = [], playing = false;
-  function reset(){ timers.forEach(clearTimeout); timers = []; evs.forEach(function(e){ e.classList.remove('show','cur'); }); }
-  function play(){
-    playing = true; reset(); var d = 300;
-    evs.forEach(function(e, i){
-      var dur = e.classList.contains('think') ? 1000 : e.classList.contains('par') ? 1350 : 1050;
-      timers.push(setTimeout(function(){
-        evs.forEach(function(x){ x.classList.remove('cur'); });
-        e.classList.add('show','cur');
-        if(i === evs.length - 1){ setTimeout(function(){ e.classList.remove('cur'); playing = false; }, 800); }
-      }, d));
-      d += dur;
+  function clearAll(){ timers.forEach(function(t){ clearTimeout(t); }); timers = []; }
+  function reset(){
+    clearAll();
+    evs.forEach(function(e){
+      e.classList.remove('show','cur','active');
+      var feed = e.querySelectorAll('.rp-lane-feed li'); [].forEach.call(feed,function(li){li.classList.remove('in');});
+      var lanes = e.querySelectorAll('.rp-lane'); [].forEach.call(lanes,function(l){l.classList.remove('lit');});
+      var foot = e.querySelector('.rp-fan-foot'); if(foot) foot.classList.remove('show');
     });
+    if(railFill) railFill.style.right = '100%';
+    if(phase){ phase.textContent=''; phase.classList.remove('on'); }
   }
-  if(btn) btn.addEventListener('click', play);
+
+  // animate the held parallel stage: lanes light, then findings stream in, then converge
+  function runFan(el, done){
+    el.classList.add('active');
+    var lanes = [].slice.call(el.querySelectorAll('.rp-lane'));
+    var foot = el.querySelector('.rp-fan-foot');
+    if(reduce){
+      lanes.forEach(function(l){ l.classList.add('lit'); });
+      [].forEach.call(el.querySelectorAll('.rp-lane-feed li'),function(li){li.classList.add('in');});
+      if(foot) foot.classList.add('show');
+      timers.push(setTimeout(done, 900));
+      return;
+    }
+    // 1) all three lanes light at once (the "running in parallel" beat)
+    timers.push(setTimeout(function(){ lanes.forEach(function(l){ l.classList.add('lit'); }); }, 120));
+    // 2) findings stream concurrently across lanes, row by row (max 3 rows)
+    var feeds = lanes.map(function(l){ return [].slice.call(l.querySelectorAll('.rp-lane-feed li')); });
+    var maxRows = 3, rowGap = 1100, startAt = 500;
+    for(var row=0; row<maxRows; row++){
+      (function(row){
+        timers.push(setTimeout(function(){
+          feeds.forEach(function(f){ if(f[row]) f[row].classList.add('in'); });
+        }, startAt + row*rowGap));
+      })(row);
+    }
+    // 3) converge
+    timers.push(setTimeout(function(){ if(foot) foot.classList.add('show'); el.classList.remove('active'); }, startAt + maxRows*rowGap + 250));
+    timers.push(setTimeout(done, startAt + maxRows*rowGap + 900));
+  }
+
+  function play(){
+    if(playing) return;
+    playing = true; reset();
+    if(reduce){
+      // show everything, expand the fan, no per-step timing fuss
+      evs.forEach(function(e){ e.classList.add('show'); });
+      var fan = body.querySelector('.rp-fan'); if(fan) runFan(fan, function(){});
+      if(railFill) railFill.style.right='0%';
+      if(phase){ phase.textContent='done'; phase.classList.add('on'); }
+      playing = false;
+      return;
+    }
+    var i = 0;
+    function step(){
+      if(i >= evs.length){ playing = false; return; }
+      var el = evs[i];
+      evs.forEach(function(x){ x.classList.remove('cur'); });
+      el.classList.add('show');
+      if(railFill) railFill.style.right = (100 - Math.round(((i+1)/evs.length)*100)) + '%';
+      if(phase){ phase.textContent = phases[i] || ''; phase.classList.add('on'); }
+      var advance = function(){ i++; step(); };
+      if(el.classList.contains('rp-fan')){
+        runFan(el, advance);
+      } else {
+        if(el.classList.contains('think')) el.classList.add('cur');
+        timers.push(setTimeout(advance, dwell(el)));
+      }
+    }
+    step();
+  }
+
+  if(btn) btn.addEventListener('click', function(){ if(playing){ reset(); playing=false; } play(); });
+
   if('IntersectionObserver' in window){
     var seen = false;
     var io = new IntersectionObserver(function(entries){
       entries.forEach(function(x){ if(x.isIntersecting && !seen){ seen = true; play(); io.disconnect(); } });
-    }, { threshold: 0.3 });
+    }, { threshold: 0.25 });
     io.observe(r);
-  } else { play(); }
+  } else {
+    play();
+  }
+})();
+
+/* ---- interactive voice cards ---- */
+/* ===== voice-card tap/keyboard reveal (vc-) — defensive vanilla IIFE ===== */
+(function(){
+  var cards = [].slice.call(document.querySelectorAll('.vc-card'));
+  if(!cards.length) return;
+
+  function close(card){
+    card.classList.remove('is-open');
+    card.setAttribute('aria-expanded','false');
+  }
+  function open(card){
+    cards.forEach(function(c){ if(c!==card) close(c); }); // one open at a time
+    card.classList.add('is-open');
+    card.setAttribute('aria-expanded','true');
+  }
+  function toggle(card){
+    if(card.classList.contains('is-open')) close(card); else open(card);
+  }
+
+  cards.forEach(function(card){
+    // pointer: tap/click toggles (also fine on desktop; :hover already reveals)
+    card.addEventListener('click', function(e){
+      e.preventDefault();
+      toggle(card);
+    });
+    // keyboard: Enter/Space toggles, Esc closes
+    card.addEventListener('keydown', function(e){
+      var k = e.key;
+      if(k === 'Enter' || k === ' ' || k === 'Spacebar'){
+        e.preventDefault(); toggle(card);
+      } else if(k === 'Escape' || k === 'Esc'){
+        if(card.classList.contains('is-open')){ close(card); }
+      }
+    });
+    // blur via keyboard navigation: collapse the tap-state so it doesn't linger
+    card.addEventListener('blur', function(){
+      // keep :focus-within behaviour to CSS; only clear the explicit tap flag
+      close(card);
+    });
+  });
+
+  // tap-away anywhere outside an open card closes it (touch + desktop)
+  document.addEventListener('click', function(e){
+    if(e.target && e.target.closest && e.target.closest('.vc-card')) return;
+    cards.forEach(close);
+  });
+  // global Esc as a fallback
+  document.addEventListener('keydown', function(e){
+    if(e.key === 'Escape' || e.key === 'Esc'){ cards.forEach(close); }
+  });
 })();
 </script>
 

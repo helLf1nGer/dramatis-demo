@@ -1,0 +1,129 @@
+<!-- ============================================================
+  REUSABLE PATTERN — one .vc-card. Resting state shows
+  character + voice + provider chip; .vc-detail reveals on
+  hover / focus-within / .is-open (tap). data-prov sets chip tint.
+  Pattern:
+  <div class="vc-card" tabindex="0" role="button" aria-expanded="false"
+       data-prov="gemini">
+    <div class="vc-head">
+      <span class="vc-who">CHARACTER</span>
+      <span class="vc-chip">PROVIDER</span>
+    </div>
+    <span class="vc-voice">VoiceName · accent</span>
+    <div class="vc-detail"><div class="vc-detail-i">
+      <span class="vc-for">chosen_for…</span>
+      <span class="vc-id">voice_id · provider_id</span>
+    </div></div>
+  </div>
+============================================================ -->
+
+<!-- (1) MARLEY CENTERPIECE — replaces lines 144-148 (.cast block) -->
+<div class="vc-cast">
+  <div class="vc-card" tabindex="0" role="button" aria-expanded="false" data-prov="gemini">
+    <div class="vc-head"><span class="vc-who">Narrator · Charon</span><span class="vc-chip">Gemini 3.1 Flash</span></div>
+    <span class="vc-voice">warm fireside RP <span class="vc-cue" aria-hidden="true">why this voice ›</span></span>
+    <div class="vc-detail"><div class="vc-detail-i">
+      <span class="vc-for">Warm fireside Dickensian storyteller — gentle gravitas, calm amid the dread.</span>
+      <span class="vc-id">Charon · Received Pronunciation</span>
+    </div></div>
+  </div>
+  <div class="vc-card" tabindex="0" role="button" aria-expanded="false" data-prov="gemini">
+    <div class="vc-head"><span class="vc-who">Scrooge · Orus</span><span class="vc-chip">Gemini 3.1 Flash</span></div>
+    <span class="vc-voice">thin, brittle, pinched <span class="vc-cue" aria-hidden="true">why this voice ›</span></span>
+    <div class="vc-detail"><div class="vc-detail-i">
+      <span class="vc-for">High, thin, brittle and dry — the pinched, caustic miser.</span>
+      <span class="vc-id">Orus · Received Pronunciation</span>
+    </div></div>
+  </div>
+  <div class="vc-card" tabindex="0" role="button" aria-expanded="false" data-prov="gemini">
+    <div class="vc-head"><span class="vc-who">Marley's Ghost · Algenib</span><span class="vc-chip">Gemini 3.1 Flash</span></div>
+    <span class="vc-voice">deep, sepulchral + reverb <span class="vc-cue" aria-hidden="true">why this voice ›</span></span>
+    <div class="vc-detail"><div class="vc-detail-i">
+      <span class="vc-for">Deep, sepulchral ghost — each word lands like a tolling bell.</span>
+      <span class="vc-id">Algenib · Received Pronunciation</span>
+    </div></div>
+  </div>
+</div>
+
+<!-- (2) ODYSSEY GALLERY — replaces lines 221-225 (.cast block) -->
+<div class="vc-cast">
+  <div class="vc-card" tabindex="0" role="button" aria-expanded="false" data-prov="gemini">
+    <div class="vc-head"><span class="vc-who">Odysseus · Fenrir</span><span class="vc-chip">Gemini 3.1 Flash</span></div>
+    <span class="vc-voice">deep, gravelly baritone <span class="vc-cue" aria-hidden="true">why this voice ›</span></span>
+    <div class="vc-detail"><div class="vc-detail-i">
+      <span class="vc-for">Deep resonant baritone, gravelly — a seasoned king and survivor.</span>
+      <span class="vc-id">Fenrir · Received Pronunciation</span>
+    </div></div>
+  </div>
+  <div class="vc-card" tabindex="0" role="button" aria-expanded="false" data-prov="gemini">
+    <div class="vc-head"><span class="vc-who">Polyphemus · Charon</span><span class="vc-chip">Gemini 3.1 Flash</span></div>
+    <span class="vc-voice">deep, guttural, unrefined <span class="vc-cue" aria-hidden="true">why this voice ›</span></span>
+    <div class="vc-detail"><div class="vc-detail-i">
+      <span class="vc-for">Massive chest resonance — a force of nature, terrifyingly arrogant.</span>
+      <span class="vc-id">Charon · deep, guttural, unrefined</span>
+    </div></div>
+  </div>
+  <div class="vc-card" tabindex="0" role="button" aria-expanded="false" data-prov="gemini">
+    <div class="vc-head"><span class="vc-who">Narrator · Fenrir</span><span class="vc-chip">Gemini 3.1 Flash</span></div>
+    <span class="vc-voice">same voice as Odysseus <span class="vc-cue" aria-hidden="true">why this voice ›</span></span>
+    <div class="vc-detail"><div class="vc-detail-i">
+      <span class="vc-for">The same voice as Odysseus — the hero recounting his own tale.</span>
+      <span class="vc-id">Fenrir · Received Pronunciation</span>
+    </div></div>
+  </div>
+</div>
+
+<!-- (3) WORLD DRAGON'S HEIR — NEW cast block. Insert INSIDE the WDH
+     .card, immediately AFTER the .statline (after line 243), BEFORE the
+     closing <p class="note">. Multi-provider showpiece: chip tints differ. -->
+<p class="vc-lede">A cast spanning <strong>four TTS providers</strong> in one production — hover or tap a voice to see why each was cast.</p>
+<div class="vc-cast vc-cast--wide">
+  <div class="vc-card" tabindex="0" role="button" aria-expanded="false" data-prov="chirp">
+    <div class="vc-head"><span class="vc-who">Narrator</span><span class="vc-chip">Chirp 3 HD</span></div>
+    <span class="vc-voice">warm, intimate storyteller <span class="vc-cue" aria-hidden="true">why this voice ›</span></span>
+    <div class="vc-detail"><div class="vc-detail-i">
+      <span class="vc-for">Warm, intimate master storyteller by a fireside — the one role reserved for Chirp.</span>
+      <span class="vc-id">en-GB-Chirp3-HD-Vindemiatrix · British</span>
+    </div></div>
+  </div>
+  <div class="vc-card" tabindex="0" role="button" aria-expanded="false" data-prov="gemini">
+    <div class="vc-head"><span class="vc-who">Dominic</span><span class="vc-chip">Gemini TTS</span></div>
+    <span class="vc-voice">protagonist lead <span class="vc-cue" aria-hidden="true">why this voice ›</span></span>
+    <div class="vc-detail"><div class="vc-detail-i">
+      <span class="vc-for">Protagonist lead voice, given palace-room reverb for the dinner scene.</span>
+      <span class="vc-id">Alnilam · neutral British</span>
+    </div></div>
+  </div>
+  <div class="vc-card" tabindex="0" role="button" aria-expanded="false" data-prov="gemini">
+    <div class="vc-head"><span class="vc-who">Pops</span><span class="vc-chip">Gemini TTS</span></div>
+    <span class="vc-voice">deep, warm elder <span class="vc-cue" aria-hidden="true">why this voice ›</span></span>
+    <div class="vc-detail"><div class="vc-detail-i">
+      <span class="vc-for">Deep, warm elder presence anchoring the family dinner.</span>
+      <span class="vc-id">Algenib · neutral British</span>
+    </div></div>
+  </div>
+  <div class="vc-card" tabindex="0" role="button" aria-expanded="false" data-prov="eleven">
+    <div class="vc-head"><span class="vc-who">General Fox</span><span class="vc-chip">ElevenLabs</span></div>
+    <span class="vc-voice">commanding military timbre <span class="vc-cue" aria-hidden="true">why this voice ›</span></span>
+    <div class="vc-detail"><div class="vc-detail-i">
+      <span class="vc-for">A distinct ElevenLabs timbre, used surgically to mark the commanding military general.</span>
+      <span class="vc-id">cjVigY5qzO86Huf0OWal · ElevenLabs</span>
+    </div></div>
+  </div>
+  <div class="vc-card" tabindex="0" role="button" aria-expanded="false" data-prov="gemini">
+    <div class="vc-head"><span class="vc-who">Princess Elanor</span><span class="vc-chip">Gemini TTS</span></div>
+    <span class="vc-voice">calm, authoritative <span class="vc-cue" aria-hidden="true">why this voice ›</span></span>
+    <div class="vc-detail"><div class="vc-detail-i">
+      <span class="vc-for">Calm, experienced, authoritative — the elder twin Princess.</span>
+      <span class="vc-id">Kore · Posh British</span>
+    </div></div>
+  </div>
+  <div class="vc-card" tabindex="0" role="button" aria-expanded="false" data-prov="gemini">
+    <div class="vc-head"><span class="vc-who">Princess Alexis</span><span class="vc-chip">Gemini TTS</span></div>
+    <span class="vc-voice">sharp, fiercely protective <span class="vc-cue" aria-hidden="true">why this voice ›</span></span>
+    <div class="vc-detail"><div class="vc-detail-i">
+      <span class="vc-for">Sharp, fiercely protective wit behind royal politeness.</span>
+      <span class="vc-id">Erinome · Posh British</span>
+    </div></div>
+  </div>
+</div>
