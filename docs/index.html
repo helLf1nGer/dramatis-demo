@@ -75,24 +75,36 @@
   footer{border-top:1px solid var(--line);padding:34px 0 60px;color:var(--mut);font-size:14px;text-align:center}
   .note{color:var(--mut);font-size:12.5px;margin-top:18px;font-style:italic}
 
-  /* production timeline */
-  .tl{position:relative;margin:24px 0 0;padding-left:34px}
-  .tl::before{content:"";position:absolute;left:11px;top:8px;bottom:14px;width:2px;
-    background:linear-gradient(var(--gold),rgba(216,166,87,.15))}
-  .stage{position:relative;margin:0 0 24px}
-  .stage::before{content:attr(data-n);position:absolute;left:-34px;top:-2px;width:24px;height:24px;border-radius:50%;
-    background:var(--panel2);border:1px solid var(--gold);color:var(--gold2);font:600 12px/23px Georgia,serif;text-align:center}
-  .stage .role{color:var(--gold);font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;font-family:ui-monospace,Menlo,Consolas,monospace}
-  .stage h3{font-size:18px;margin:3px 0 0}
-  .stage p{margin:6px 0 0;color:var(--mut);font-size:14.5px}
-  .agents{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px}
-  .agent{flex:1;min-width:160px;background:#11141b;border:1px solid var(--line);border-radius:10px;padding:11px 13px}
-  .agent b{color:var(--gold2);font-size:13px;display:block;margin-bottom:2px}
-  .agent span{color:var(--mut);font-size:12.5px}
-  .delta{display:inline-flex;align-items:center;gap:7px;background:#11141b;border:1px solid var(--line);
-    border-radius:8px;padding:6px 11px;margin:10px 8px 0 0;font-size:13px}
-  .delta .lbl{color:var(--mut);font-size:12px}
-  .delta .bf{color:#caa56a}.delta .af{color:var(--good);font-weight:600}
+  /* agent-trace replay console */
+  .replay{background:#0a0c11;border:1px solid var(--line);border-radius:12px;overflow:hidden;
+    margin:22px 0 0;box-shadow:0 12px 44px rgba(0,0,0,.4)}
+  .replay-bar{display:flex;align-items:center;gap:10px;padding:9px 13px;background:#11141b;border-bottom:1px solid var(--line)}
+  .rb-dots{display:flex;gap:6px}
+  .rb-dots i{width:10px;height:10px;border-radius:50%;background:#2e3440;display:block}
+  .rb-title{flex:1;color:var(--mut);font:12px/1 ui-monospace,Menlo,Consolas,monospace}
+  .rb-play{background:var(--panel2);color:var(--gold2);border:1px solid var(--line);border-radius:7px;
+    padding:5px 12px;font:600 12px/1 ui-monospace,Menlo,Consolas,monospace;cursor:pointer}
+  .rb-play:hover{border-color:var(--gold)}
+  .replay-body{padding:15px 16px;min-height:312px;max-height:392px;overflow-y:auto;scroll-behavior:smooth;
+    font:13.5px/1.5 ui-monospace,Menlo,Consolas,monospace}
+  .ev{margin:0 0 11px;transition:opacity .45s ease,transform .45s ease}
+  .replay.armed .ev{opacity:0;transform:translateY(8px)}
+  .replay.armed .ev.show{opacity:1;transform:none}
+  .ev.think{color:#cfd3da;font-style:italic;font-family:Georgia,"Times New Roman",serif;font-size:14.5px}
+  .ev.think::before{content:"› director  ";font:normal 11px/1 ui-monospace,Menlo,Consolas,monospace;color:var(--gold)}
+  .ev.call{display:flex;flex-wrap:wrap;gap:3px 12px;align-items:baseline;padding-left:13px;border-left:2px solid #232833}
+  .ev.call .tool{color:var(--gold2);font-weight:600}
+  .ev.call .res{color:var(--mut)}
+  .ev.call.warn{border-left-color:#b9852f}.ev.call.warn .tool{color:#e6b35a}
+  .ev.call.ok{border-left-color:var(--good)}.ev.call.ok .tool{color:#9fd3b0}
+  .ev.par{display:flex;gap:8px;flex-wrap:wrap}
+  .ev.par .pa{flex:1;min-width:132px;background:#11141b;border:1px solid var(--line);border-left:2px solid var(--gold);
+    border-radius:8px;padding:8px 11px}
+  .ev.par .pa b{color:var(--gold2);display:block;font-size:12.5px}
+  .ev.par .pa span{color:var(--mut);font-size:11.5px}
+  .ev.show.cur::after{content:"▋";color:var(--gold);margin-left:3px;animation:blink 1s step-end infinite}
+  @keyframes blink{50%{opacity:0}}
+  @media (prefers-reduced-motion: reduce){.replay.armed .ev{opacity:1;transform:none}}
 </style>
 </head>
 <body>
@@ -151,65 +163,33 @@
       piece above: 166 reasoning steps over typed tools, specialist sub-agents, and an observe-then-repair
       loop. No human edits.</p>
 
-    <div class="tl">
-      <div class="stage" data-n="1">
-        <span class="role">director · analyze_text</span>
-        <h3>Read the manuscript, found its shape</h3>
-        <p>Broke the 301-word passage into <strong>four dramatic waves</strong> — the knocker becoming a
-          face, the ascent through empty rooms, the bells &amp; the rising chain, and the confrontation —
-          across 20 lines and 3 speaking parts.</p>
+    <div class="replay" id="replay">
+      <div class="replay-bar">
+        <span class="rb-dots"><i></i><i></i><i></i></span>
+        <span class="rb-title">dramatis · session: showcase-marley · ch01</span>
+        <button class="rb-play" id="rbPlay" type="button">▶ Replay</button>
       </div>
-
-      <div class="stage" data-n="2">
-        <span class="role">audition_voice → evaluate_audition → cast_voice</span>
-        <h3>Auditioned 9 voices, cast a 3-register ensemble</h3>
-        <p>Sampled candidate voices for each role, had every take evaluated for character fit and ensemble
-          contrast, then cast for a deliberate clash of registers — high, mid, deep. The verdicts:</p>
-        <div class="cast">
-          <div class="voice"><span class="who">Scrooge → Orus</span><span class="vo">“brilliantly high, thin and dry”</span></div>
-          <div class="voice"><span class="who">Marley → Algenib</span><span class="vo">“weary, sepulchral… tolling-bell weight”</span></div>
-          <div class="voice"><span class="who">Narrator → Charon</span><span class="vo">“warm fireside Dickensian storyteller”</span></div>
+      <div class="replay-body" id="rbBody">
+        <div class="ev think">A beautiful piece — slow-burn dread in four waves. Let me break it down.</div>
+        <div class="ev call"><span class="tool">analyze_text</span><span class="res">4 scenes · 20 lines · 3 speaking parts</span></div>
+        <div class="ev think">Three registers in deliberate contrast. Auditioning candidates for each role.</div>
+        <div class="ev call"><span class="tool">audition_voice ×9</span><span class="res">Scrooge · Marley · Narrator — 3 takes each</span></div>
+        <div class="ev call"><span class="tool">evaluate_audition</span><span class="res">Orus “high, thin, dry” · Algenib “weary, sepulchral” · Charon “warm storyteller”</span></div>
+        <div class="ev call"><span class="tool">cast_voice ×3</span><span class="res">ensemble locked — high / mid / deep</span></div>
+        <div class="ev call"><span class="tool">set_audio_treatment</span><span class="res">Marley → supernatural reverb + pitch-drop</span></div>
+        <div class="ev call"><span class="tool">synthesize_batch</span><span class="res">19 line-level stems performed</span></div>
+        <div class="ev think">Stems are down — hand off to the review crew, all at once.</div>
+        <div class="ev par">
+          <div class="pa"><b>qa_engineer</b><span>transcribe + masking</span></div>
+          <div class="pa"><b>creative_dramaturg</b><span>performance vs brief</span></div>
+          <div class="pa"><b>sound_designer</b><span>build soundscape</span></div>
         </div>
-      </div>
-
-      <div class="stage" data-n="3">
-        <span class="role">set_audio_treatment → synthesize_batch</span>
-        <h3>Directed the performance</h3>
-        <p>Gave each character a tailored treatment — Marley a genuinely supernatural reverb + pitch-drop,
-          the narrator a warm polish — then performed all <strong>19 line-level stems</strong>.</p>
-      </div>
-
-      <div class="stage" data-n="4">
-        <span class="role">dispatch_worker ×3 · in parallel</span>
-        <h3>Handed off to a review crew — all at once</h3>
-        <p>Dispatched three specialists concurrently, each its own sub-agent with its own tools:</p>
-        <div class="agents">
-          <div class="agent"><b>QA engineer</b><span>Transcribes every line back, measures pacing + dialogue masking.</span></div>
-          <div class="agent"><b>Creative dramaturg</b><span>“Scrooge's arc perfectly realized… the register clash superb.”</span></div>
-          <div class="agent"><b>Sound designer</b><span>Builds the four-scene cinematic soundscape.</span></div>
-        </div>
-      </div>
-
-      <div class="stage" data-n="5">
-        <span class="role">observe → repair → re-verify</span>
-        <h3>Caught its own mistakes and fixed them</h3>
-        <p>QA transcribed the rendered audio back, found genuine flubs and a narrator take that drifted
-          sharp, re-took just those lines, and re-checked — distinguishing real defects from false alarms
-          by ear:</p>
-        <div>
-          <span class="delta"><span class="lbl">transcript</span><span class="bf">86.5%</span>→<span class="af">99.7%</span></span>
-          <span class="delta"><span class="lbl">voice consistency</span><span class="bf">0/2</span>→<span class="af">2/3</span></span>
-          <span class="delta"><span class="lbl">dialogue masking</span><span class="bf">−4.4&nbsp;dB</span>→<span class="af">clear</span></span>
-        </div>
-      </div>
-
-      <div class="stage" data-n="6">
-        <span class="role">design_soundscape → mix_chapter → export</span>
-        <h3>Sound-designed and mastered</h3>
-        <p>Placed <strong>16 cues</strong> across the four waves — bitter wind &amp; a distant bell → the
-          door-slam echoing through an empty house → one bell swelling into <em>every</em> bell, dragging
-          chains, the cellar-door boom → spectral resonance and a sepulchral cello. Mixed <strong>42
-          layers</strong> at a radio-drama profile; two independent mix reviews returned “release-ready.”</p>
+        <div class="ev call warn"><span class="tool">qa_engineer ⚠</span><span class="res">“Much!”→“marsh” · narrator drifted +5.7 st</span></div>
+        <div class="ev call ok"><span class="tool">re-synthesize → re-verify</span><span class="res">transcript 86.5% → 99.7% · voice back in register</span></div>
+        <div class="ev call"><span class="tool">creative_dramaturg</span><span class="res">“Scrooge's arc perfectly realized… register clash superb”</span></div>
+        <div class="ev call"><span class="tool">design_soundscape</span><span class="res">16 cues · bells → chains → cellar-door boom → cello</span></div>
+        <div class="ev call"><span class="tool">mix_chapter → measure_masking</span><span class="res">42 layers · radio_drama · masking −4.4 dB → clear</span></div>
+        <div class="ev call ok"><span class="tool">export_chapter ✓</span><span class="res">ch01.mp3 · 3:19 · “release-ready”</span></div>
       </div>
     </div>
 
@@ -275,6 +255,39 @@
     <span class="note">All audio generated by the Dramatis pipeline from public-domain or original text. Showcase build.</span>
   </div>
 </footer>
+
+<script>
+(function(){
+  var r = document.getElementById('replay'); if(!r) return;
+  var body = document.getElementById('rbBody'); if(!body) return;
+  var btn = document.getElementById('rbPlay');
+  var evs = [].slice.call(body.querySelectorAll('.ev'));
+  r.classList.add('armed');               // only hide steps when JS is available
+  var timers = [], playing = false;
+  function reset(){ timers.forEach(clearTimeout); timers = []; evs.forEach(function(e){ e.classList.remove('show','cur'); }); body.scrollTop = 0; }
+  function play(){
+    playing = true; reset(); var d = 300;
+    evs.forEach(function(e, i){
+      var dur = e.classList.contains('think') ? 1000 : e.classList.contains('par') ? 1350 : 1050;
+      timers.push(setTimeout(function(){
+        evs.forEach(function(x){ x.classList.remove('cur'); });
+        e.classList.add('show','cur');
+        body.scrollTop = body.scrollHeight;
+        if(i === evs.length - 1){ setTimeout(function(){ e.classList.remove('cur'); playing = false; }, 800); }
+      }, d));
+      d += dur;
+    });
+  }
+  if(btn) btn.addEventListener('click', play);
+  if('IntersectionObserver' in window){
+    var seen = false;
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(x){ if(x.isIntersecting && !seen){ seen = true; play(); io.disconnect(); } });
+    }, { threshold: 0.3 });
+    io.observe(r);
+  } else { play(); }
+})();
+</script>
 
 </body>
 </html>
