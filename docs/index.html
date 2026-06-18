@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dramatis — the AI full-cast audiobook studio</title>
+<meta name="description" content="Dramatis turns raw text into full-cast, sound-designed, mixed audiobook audio. An AI Director casts voices, builds soundscapes, and masters the mix — these are real, unedited outputs.">
+<style>
+  :root{
+    --bg:#0d0f14; --panel:#161922; --panel2:#1d212c; --ink:#e9e6df; --mut:#9aa0ad;
+    --gold:#d8a657; --gold2:#f0c987; --line:#2a2f3a; --good:#7bb88f;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font:16px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    -webkit-font-smoothing:antialiased}
+  .wrap{max-width:920px;margin:0 auto;padding:0 22px}
+  h1,h2,h3{font-family:Georgia,"Times New Roman",serif;font-weight:600;letter-spacing:.2px;line-height:1.2}
+  a{color:var(--gold2);text-decoration:none}
+  a:hover{text-decoration:underline}
+  .tag{display:inline-block;font-size:12px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--gold);border:1px solid var(--line);border-radius:999px;padding:4px 12px}
+
+  /* hero */
+  header.hero{padding:84px 0 54px;text-align:center;
+    background:radial-gradient(1100px 460px at 50% -8%,rgba(216,166,87,.13),transparent 70%)}
+  header.hero h1{font-size:60px;margin:18px 0 10px;background:linear-gradient(180deg,#fff,var(--gold2));
+    -webkit-background-clip:text;background-clip:text;color:transparent}
+  header.hero p.lead{font-size:20px;color:var(--ink);max-width:640px;margin:0 auto 6px}
+  header.hero p.sub{color:var(--mut);max-width:600px;margin:10px auto 0}
+
+  section{padding:46px 0;border-top:1px solid var(--line)}
+  section h2{font-size:30px;margin:0 0 6px}
+  .eyebrow{color:var(--gold);font-size:13px;letter-spacing:.16em;text-transform:uppercase;margin:0 0 8px}
+  .desc{color:var(--mut);max-width:680px;margin:0 0 22px}
+
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:24px;margin:18px 0}
+  .card.feature{background:linear-gradient(180deg,var(--panel2),var(--panel));border-color:#34302a}
+  .card h3{font-size:22px;margin:0 0 2px}
+  .card .meta{color:var(--mut);font-size:14px;margin:0 0 16px}
+
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+  @media(max-width:720px){.grid{grid-template-columns:1fr}header.hero h1{font-size:42px}}
+
+  blockquote.script{margin:0 0 18px;padding:16px 18px;background:#10131a;border-left:3px solid var(--gold);
+    border-radius:0 8px 8px 0;color:#d4d0c7;font-family:Georgia,serif;font-size:15px;line-height:1.7}
+  blockquote.script .sp{color:var(--gold2);font-style:normal}
+
+  audio{width:100%;margin-top:6px;filter:saturate(.9)}
+  .players{display:flex;flex-direction:column;gap:6px}
+
+  .cast{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+  .voice{display:flex;flex-direction:column;background:#11141b;border:1px solid var(--line);
+    border-radius:10px;padding:9px 13px;min-width:150px}
+  .voice .who{font-weight:600;font-size:14px}
+  .voice .vo{color:var(--mut);font-size:12.5px}
+  .pill{display:inline-block;font-size:11px;color:var(--mut);border:1px solid var(--line);
+    border-radius:6px;padding:1px 7px;margin-left:6px}
+
+  .pending{display:flex;align-items:center;gap:10px;color:var(--gold2);font-size:15px;
+    background:#13161e;border:1px dashed #4a4332;border-radius:10px;padding:14px 16px}
+  .dot{width:9px;height:9px;border-radius:50%;background:var(--gold);animation:pulse 1.3s infinite}
+  @keyframes pulse{0%,100%{opacity:.35}50%{opacity:1}}
+
+  .steps{display:flex;flex-wrap:wrap;gap:10px;margin-top:10px}
+  .step{flex:1;min-width:120px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px}
+  .step b{color:var(--gold2);display:block;font-size:14px;margin-bottom:3px}
+  .step span{color:var(--mut);font-size:13px}
+
+  .statline{display:flex;gap:26px;flex-wrap:wrap;margin:6px 0 0}
+  .statline .s b{font-size:26px;color:var(--gold2);font-family:Georgia,serif}
+  .statline .s span{color:var(--mut);font-size:13px;display:block}
+
+  footer{border-top:1px solid var(--line);padding:34px 0 60px;color:var(--mut);font-size:14px;text-align:center}
+  .note{color:var(--mut);font-size:12.5px;margin-top:18px;font-style:italic}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <span class="tag">Agentic audio production</span>
+    <h1>Dramatis</h1>
+    <p class="lead">Raw text in. A full-cast, sound-designed, mastered audiobook out.</p>
+    <p class="sub">An AI <em>Director</em> reads the manuscript, casts a distinct voice per character,
+      designs the soundscape, performs every line, and mixes the master — autonomously, or with a
+      human in the loop. Everything below is a <strong>real, unedited output</strong> of the pipeline.</p>
+  </div>
+</header>
+
+<!-- CENTERPIECE: produced live -->
+<section id="live">
+  <div class="wrap">
+    <p class="eyebrow">Produced on the spot</p>
+    <h2>From this passage, just now</h2>
+    <p class="desc">We handed the studio a public-domain scene — Dickens' <em>A Christmas Carol</em>,
+      "Marley's Ghost" — and let it cast, sound-design, and mix. No hand-editing.</p>
+
+    <div class="card feature">
+      <h3>A Christmas Carol — “Marley's Ghost”</h3>
+      <p class="meta">Charles Dickens, 1843 · public domain · Opus&nbsp;4.8 director · Gemini&nbsp;3.1&nbsp;Flash voices</p>
+
+      <blockquote class="script">
+        Then the bells began to ring… succeeded by a clanking noise, deep down below, as if some
+        person were dragging a heavy chain. The cellar-door flew open with a booming sound…<br>
+        <span class="sp">Scrooge:</span> “How now! What do you want with me?”<br>
+        <span class="sp">Marley's Ghost:</span> “Much!”<br>
+        <span class="sp">Scrooge:</span> “You are fettered. Tell me why.”<br>
+        <span class="sp">Marley's Ghost:</span> “I wear the chain I forged in life…”
+      </blockquote>
+
+      <!-- MARLEY_AUDIO_SLOT -->
+      <div class="pending"><span class="dot"></span> Mixing in the studio — final master drops here.</div>
+      <!-- /MARLEY_AUDIO_SLOT -->
+
+      <!-- MARLEY_CAST_SLOT -->
+      <!-- /MARLEY_CAST_SLOT -->
+    </div>
+  </div>
+</section>
+
+<!-- GALLERY -->
+<section id="gallery">
+  <div class="wrap">
+    <p class="eyebrow">From the catalogue</p>
+    <h2>More finished work</h2>
+    <p class="desc">Different genres, voice palettes, and providers — the studio is provider-agnostic,
+      mixing Google Gemini, Chirp, and ElevenLabs voices into one cast.</p>
+
+    <div class="card">
+      <h3>The Odyssey — The Cave of Polyphemus</h3>
+      <p class="meta">Homer (trans., public domain) · 3 voices · Gemini 3.1 Flash</p>
+      <blockquote class="script">
+        <span class="sp">Odysseus:</span> “Nobody. My mother, my father, all my kin — they call me Nobody.”<br>
+        The giant laughed, wine black in his beard.<br>
+        <span class="sp">Polyphemus:</span> “Then Nobody shall be eaten last. That is my gift to you.”
+      </blockquote>
+      <div class="players"><audio controls preload="none" src="audio/odyssey_polyphemus.mp3"></audio></div>
+      <div class="cast">
+        <div class="voice"><span class="who">Odysseus</span><span class="vo">Fenrir · Received Pronunciation</span></div>
+        <div class="voice"><span class="who">Polyphemus</span><span class="vo">Charon · deep, guttural</span></div>
+        <div class="voice"><span class="who">Narrator</span><span class="vo">Fenrir · RP</span></div>
+      </div>
+      <p class="note">This is the exact scene our <a href="https://hellf1nger.github.io/Dramatis-DAW/">Timeline Surgeon</a>
+        demo operates on — watch the studio align the giant's laugh onto the word “laughed.”</p>
+    </div>
+
+    <div class="card">
+      <h3>World Dragon's Heir <span class="pill">original novel</span></h3>
+      <p class="meta">Chapter 1 — “A Warm Welcome to Cygnia” · 60-second highlight</p>
+      <blockquote class="script">
+        “And stay out, you filthy beggar!” Dominic heard the shopkeeper shout as he picked himself up
+        from the dusty roadway — the fourth time this week he'd been thrown from a Noble-run shop.
+      </blockquote>
+      <div class="players"><audio controls preload="none" src="audio/wdh_ch01_highlight.mp3"></audio></div>
+      <div class="statline">
+        <div class="s"><b>46</b><span>chapters produced</span></div>
+        <div class="s"><b>76</b><span>distinct character voices</span></div>
+        <div class="s"><b>4</b><span>TTS providers, one cast</span></div>
+      </div>
+      <p class="note">A feature-length original — proof the pipeline holds a consistent cast across an
+        entire book, not just a clip.</p>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section id="how">
+  <div class="wrap">
+    <p class="eyebrow">Under the hood</p>
+    <h2>How a page becomes a performance</h2>
+    <p class="desc">A Director LLM runs a reasoning loop over typed tools — no generic “write a file”
+      escape hatch, every action is a checked operation on the production.</p>
+    <div class="steps">
+      <div class="step"><b>Read &amp; cast</b><span>Parse the manuscript, assign a distinct voice + accent per character.</span></div>
+      <div class="step"><b>Sound-design</b><span>Place ambience and SFX cues against the dialogue.</span></div>
+      <div class="step"><b>Perform</b><span>Synthesize every line; QA the audio; re-take what misses.</span></div>
+      <div class="step"><b>Master</b><span>Mix stems, balance levels, export the finished chapter.</span></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    Dramatis — agentic full-cast audiobook studio ·
+    <a href="https://hellf1nger.github.io/Dramatis-DAW/">Timeline Surgeon (DAW) demo</a><br>
+    <span class="note">All audio generated by the Dramatis pipeline from public-domain or original text. Showcase build.</span>
+  </div>
+</footer>
+
+</body>
+</html>
