@@ -1,17 +1,15 @@
 # Dramatis — showcase
 
-A self-contained static showcase for **Dramatis**, the agentic full-cast audiobook studio: raw
-text in, a cast, sound design, and a mastered mix out. Everything on the page is a **real, unedited
-output** of the pipeline.
+Dramatis is a publishing house for full-cast audio. One AI Director casts every character, directs each line, places
+sound and music, and mixes. Books are live at https://dramatis.audio.
 
-**Live:** enable GitHub Pages (Settings → Pages → deploy from `main`, `/docs`).
+**Live:** https://hellf1nger.github.io/dramatis-demo/
 
 ## What's here
-- `docs/index.html` — the showcase page (no build step, no dependencies).
-- `docs/audio/` — produced MP3s:
-  - `marley.mp3` — *A Christmas Carol*, "Marley's Ghost" (Dickens, public domain) — produced for this showcase.
-  - `odyssey_polyphemus.mp3` — *The Odyssey*, Cave of Polyphemus (public domain).
-  - `wdh_ch42_highlight.mp3` — *World Dragon's Heir* (original novel), ch42 "Welcome Party" — dialogue highlight from a 43-chapter production.
+- `docs/index.html`: how one chapter was made. Oscar Wilde's *The Happy Prince*, 24 voices, started from one typed
+  sentence. The page plays the published chapter from dramatis.audio; no build step.
+- `docs/fonts/`: Fraunces, under the SIL Open Font License (`OFL.txt`).
+- `docs/audio/`: audio from the earlier version of this showcase.
 
 ## Related
 - Timeline Surgeon (the agent-facing DAW) demo: https://hellf1nger.github.io/Dramatis-DAW/
