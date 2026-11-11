@@ -13,8 +13,8 @@
   --paper:#f7f4ee; --ink:#1c1b18; --red:#c73e1d; --muted:#625e55; --rule:#d8d1c5; --green:#365348; --white:#fffdf8; --soft:#ede8df;
   --card:var(--white); --line:var(--rule); --accent:var(--red); --focus:var(--green);
   --ok:#365348; --warn:#8f5a12; --bad:#b0361a;
-  --v-narr:#8a857b; --v-swallow:#365348; --v-prince:#b8892c; --v-town:#c73e1d; --v-other:#6d3fb8;
-  --amb:#8eaa9b; --mus:#d3a94f; --sfx:#7d2a17; --head:#1c1b18;
+  --v-narr:#6b665c; --v-swallow:#365348; --v-prince:#84611a; --v-town:#c73e1d; --v-other:#6d3fb8;
+  --amb:#628172; --mus:#997427; --sfx:#7d2a17; --head:#1c1b18;
   --bar:#1c1b18; --bar-ink:#f7f4ee; --bar-muted:#d8d1c5; --bar-line:#625e55; --bar-warn:#f2a68f;
   --serif:'Fraunces',Georgia,'Times New Roman',serif;
   --sans:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
@@ -103,7 +103,10 @@ th{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;
 thead th{border-bottom:1px solid var(--ink)}
 tbody th{letter-spacing:.5px}
 td.n,th.n{text-align:right;font-variant-numeric:tabular-nums}
-.scroll{overflow-x:auto}
+.scroll{overflow-x:auto;--sbg:var(--paper);--shade:color-mix(in srgb,var(--ink) 22%,transparent);
+  background:linear-gradient(to right,var(--sbg) 40%,transparent) left/32px 100% no-repeat local,linear-gradient(to left,var(--sbg) 40%,transparent) right/32px 100% no-repeat local,
+    linear-gradient(to right,var(--shade),transparent) left/14px 100% no-repeat scroll,linear-gradient(to left,var(--shade),transparent) right/14px 100% no-repeat scroll}
+.panel .scroll{--sbg:var(--white)}
 .seek{background:none;border:1px solid var(--rule);border-radius:5px;padding:2px 8px;font:12px var(--mono);font-variant-numeric:tabular-nums;cursor:pointer;color:var(--red);white-space:nowrap}
 .seek:hover{border-color:var(--ink);background:var(--soft)}
 .note{font-size:13px;color:var(--muted)}
@@ -141,10 +144,12 @@ ul.plain li{margin:6px 0}
 footer{margin:64px 0 20px;border-top:1px solid var(--rule);padding-top:20px;font-size:12px;color:var(--muted);overflow-wrap:anywhere}
 
 /* transport: the site's ink mini player */
-.transport{position:fixed;left:0;right:0;bottom:0;background:var(--bar);border-top:1px solid var(--bar-line);color:var(--bar-ink);z-index:10;padding-bottom:env(safe-area-inset-bottom);box-shadow:0 -2px 12px #0001}
+.transport{--focus:#8fb8a5;position:fixed;left:0;right:0;bottom:0;background:var(--bar);border-top:1px solid var(--bar-line);color:var(--bar-ink);z-index:10;padding-bottom:env(safe-area-inset-bottom);box-shadow:0 -2px 12px #0001}
 .transport .wrap{display:grid;grid-template-columns:auto 1fr auto;gap:18px;align-items:center;padding-top:12px;padding-bottom:12px}
 .play{width:48px;height:48px;border-radius:50%;border:1px solid var(--bar-ink);background:var(--bar-ink);color:var(--bar);font-size:17px;cursor:pointer}
 .play:hover{background:var(--green);border-color:var(--green);color:var(--paper)}
+.play.loading,.btn.loading{cursor:progress;animation:waitpulse 1.1s ease-in-out infinite}
+@keyframes waitpulse{50%{opacity:.6}}
 .now{min-width:0}
 .now .l1{font:600 13px/1.3 var(--sans);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .now .l2{font:italic 14px/1.3 var(--serif);color:var(--bar-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -161,10 +166,23 @@ footer{margin:64px 0 20px;border-top:1px solid var(--rule);padding-top:20px;font
   .line{grid-template-columns:1fr}.bar{grid-template-columns:1fr 1fr 70px}
   .transport .wrap{grid-template-columns:auto 1fr;gap:12px}.clock{grid-column:2}
 }
+@media (max-width:640px){
+  #p-cast .scroll{overflow:visible;background:none}
+  #p-cast thead{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+  #p-cast table,#p-cast tbody{display:block}
+  #p-cast tr{display:grid;grid-template-columns:1fr auto;gap:2px 12px;align-items:baseline;padding:12px 0;border-bottom:1px solid var(--rule)}
+  #p-cast td{border:0;padding:0}
+  #p-cast td:nth-child(1){grid-area:1/1}#p-cast td:nth-child(2){grid-area:2/1}#p-cast td:nth-child(3){grid-area:1/2}
+  #p-cast td:nth-child(5){grid-area:2/2;justify-self:end}#p-cast td:nth-child(4){grid-area:3/1/4/3;margin-top:4px}
+  #p-cast td:nth-child(2)::before,#p-cast td:nth-child(3)::before{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-right:8px}
+  #p-cast td:nth-child(2)::before{content:"Voice"}#p-cast td:nth-child(3)::before{content:"Lines"}
+}
+@media (max-width:480px){.cat tr>:nth-child(2){display:none}.cat th,.cat td{padding-left:4px;padding-right:4px}.cat th{letter-spacing:.5px}}
 @media (max-width:420px){h1{font-size:36px}.top small{font-size:12px}}
-@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+@media (pointer:coarse){.seek{min-height:32px;padding:4px 10px}}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.play.loading,.btn.loading{animation:none;opacity:.7}}
 .top-r{display:flex;align-items:center;gap:14px}
-.theme-toggle{font:13px/1 var(--sans);color:var(--ink);background:transparent;border:1px solid var(--ink);border-radius:5px;min-height:34px;padding:0 12px;cursor:pointer}
+.theme-toggle{font:13px/1 var(--sans);color:var(--ink);background:transparent;border:1px solid var(--ink);border-radius:5px;min-height:40px;padding:0 12px;cursor:pointer}
 .theme-toggle:hover{border-color:var(--green);color:var(--green)}
 .theme-toggle:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
 </style>
@@ -174,7 +192,7 @@ footer{margin:64px 0 20px;border-top:1px solid var(--rule);padding-top:20px;font
 <div class="wrap">
 <header class="top">
   <div class="brand">Dramatis</div>
-  <div class="top-r"><small>How one chapter was made</small><button type="button" class="theme-toggle" id="theme-toggle" aria-label="Switch to dark mode">Dark</button></div>
+  <div class="top-r"><small>How one chapter was made</small><button type="button" class="theme-toggle" id="theme-toggle" aria-label="Switch to dark mode">Dark</button><script>(function(){var b=document.getElementById('theme-toggle'),t=document.documentElement.getAttribute('data-theme'),d=t?t==='dark':!!(window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches);b.textContent=d?'Light':'Dark';b.setAttribute('aria-label',d?'Switch to light mode':'Switch to dark mode')})();</script></div>
 </header>
 
 <h1>There are no actors in this recording.</h1>
@@ -289,7 +307,7 @@ footer{margin:64px 0 20px;border-top:1px solid var(--rule);padding-top:20px;font
 
 <h2>The catalog today</h2>
 <p class="sub">Live at <a href="https://dramatis.audio/">dramatis.audio</a> on 2026-11-10.</p>
-<div class="scroll"><table><thead><tr><th>Book</th><th>Author</th><th>State</th><th class="n">Chapters</th><th class="n">Hours</th></tr></thead><tbody id="catRows"></tbody></table></div>
+<div class="scroll"><table class="cat"><thead><tr><th>Book</th><th>Author</th><th>State</th><th class="n">Chapters</th><th class="n">Hours</th></tr></thead><tbody id="catRows"></tbody></table></div>
 
 <h2>What comes next</h2>
 <ul class="plain">
@@ -337,24 +355,39 @@ var COLOR={narr:"var(--v-narr)",swallow:"var(--v-swallow)",prince:"var(--v-princ
 var VOICE={}; C.cast.forEach(function(c){ VOICE[c.who]=c.voice; });
 
 /* ---------- player (real audio, or a silent clock if it cannot load) ---------- */
-var au=$("au"), silent=false, vt=0, vtimer=null, loaded=false;
+var au=$("au"), silent=false, vt=0, vtimer=null, loaded=false, want=false;
 function ensureSrc(){ if(!loaded){ au.src=C.audio_url; loaded=true; } }
-function now(){ return silent ? vt : au.currentTime*1000; }
+/* before metadata the element still reports 0, so a pending seek target (vt) is the position */
+function now(){ return (silent || au.readyState<1) ? vt : au.currentTime*1000; }
 function playing(){ return silent ? vtimer!==null : !au.paused; }
+function setPlayUI(on){
+  var p=$("play"), h=$("heroPlay");
+  p.textContent=on?"❚❚":"▶"; p.setAttribute("aria-label",on?"Pause":"Play");
+  h.textContent=on?"❚❚ Pause":"▶ Play the chapter"; h.setAttribute("aria-label",on?"Pause":"Play the chapter");
+}
+function setBusy(on){ ["play","heroPlay"].forEach(function(id){ var b=$(id); b.classList.toggle("loading",on); if(on) b.setAttribute("aria-busy","true"); else b.removeAttribute("aria-busy"); }); }
 function goSilent(){
-  if(silent) return; silent=true; $("silent").hidden=false;
+  if(silent) return; silent=true; $("silent").hidden=false; setBusy(false);
   vt = (au.currentTime||0)*1000 || vt;
 }
-function startSilent(){ var last=Date.now(); vtimer=setInterval(function(){ var n=Date.now(); vt+=n-last; last=n; if(vt>=DUR){ vt=DUR; stopSilent(); } tick(); },200); $("play").textContent="❚❚"; }
-function stopSilent(){ clearInterval(vtimer); vtimer=null; $("play").textContent="▶"; }
-function play(){
-  if(silent){ if(vtimer===null) startSilent(); return; }
-  ensureSrc();
-  var p=au.play(); if(p && p.catch) p.catch(function(){ goSilent(); startSilent(); });
+function startSilent(){
+  if(vtimer!==null) return;
+  var last=Date.now();
+  vtimer=setInterval(function(){ var n=Date.now(); vt+=n-last; last=n; if(vt>=DUR){ vt=DUR; stopSilent(); } tick(); },200);
+  setPlayUI(true);
 }
-function pause(){ if(silent){ stopSilent(); } else { au.pause(); } }
+function stopSilent(){ if(vtimer!==null){ clearInterval(vtimer); vtimer=null; } setPlayUI(false); }
+function play(){
+  want=true;
+  if(silent){ if(vt>=DUR) vt=0; startSilent(); tick(); return; }
+  ensureSrc();
+  if(au.readyState<3) setBusy(true);
+  /* a pause() during loading rejects play() with AbortError: that is not a media failure */
+  var p=au.play(); if(p && p.catch) p.catch(function(e){ if(e && e.name==="AbortError") return; goSilent(); if(want) startSilent(); });
+}
+function pause(){ want=false; if(silent){ stopSilent(); } else { au.pause(); } setBusy(false); }
 function seek(ms, andPlay){
-  ms=Math.max(0,Math.min(DUR-200,ms)); vt=ms;
+  ms=Math.max(0,Math.min(DUR-200,ms)); vt=ms; lastLine=null;
   if(!silent){
     ensureSrc();
     var set=function(){ try{ au.currentTime=ms/1000; }catch(e){} };
@@ -363,13 +396,24 @@ function seek(ms, andPlay){
   tick(ms);
   if(andPlay!==false) play();
 }
-au.addEventListener("error",function(){ if(loaded){ var was=vtimer!==null; goSilent(); if(!was) startSilent(); } });
-au.addEventListener("play",function(){ $("play").textContent="❚❚"; });
-au.addEventListener("pause",function(){ if(!silent) $("play").textContent="▶"; });
+au.addEventListener("error",function(){ if(loaded){ goSilent(); if(want) startSilent(); } });
+au.addEventListener("play",function(){ setPlayUI(true); });
+au.addEventListener("pause",function(){ setBusy(false); if(!silent) setPlayUI(false); });
+au.addEventListener("waiting",function(){ if(!au.paused && au.readyState<3) setBusy(true); });
+au.addEventListener("stalled",function(){ if(!au.paused && au.readyState<3) setBusy(true); });
+au.addEventListener("playing",function(){ setBusy(false); });
 au.addEventListener("timeupdate",function(){ if(!silent) tick(); });
 $("play").addEventListener("click",function(){ playing()?pause():play(); });
 $("heroPlay").addEventListener("click",function(){ playing()?pause():play(); });
+/* the scrubber follows playback except while the user is moving it (pointer held, or a key pressed just now) */
+var scrubHeld=false, scrubKeyAt=0;
+$("scrub").addEventListener("pointerdown",function(){ scrubHeld=true; });
+window.addEventListener("pointerup",function(){ scrubHeld=false; });
+window.addEventListener("pointercancel",function(){ scrubHeld=false; });
+$("scrub").addEventListener("change",function(){ scrubHeld=false; });
+$("scrub").addEventListener("keydown",function(){ scrubKeyAt=Date.now(); });
 $("scrub").addEventListener("input",function(e){ seek(e.target.value/1000*DUR, playing()); });
+setPlayUI(false);
 $("dur").textContent=fmt(DUR);
 
 /* ---------- facts ---------- */
@@ -401,12 +445,20 @@ var TABS=[["goal","The goal"],["read","The read"],["cast","Casting"],["perf","Pe
 TABS.forEach(function(t,i){
   var b=el("button","tab"); b.setAttribute("role","tab"); b.id="t-"+t[0]; b.setAttribute("aria-controls","p-"+t[0]);
   var n=el("b",null,String(i+1)); b.appendChild(n); b.appendChild(document.createTextNode(t[1]));
-  b.setAttribute("aria-selected",i===0?"true":"false");
+  b.setAttribute("aria-selected",i===0?"true":"false"); b.setAttribute("tabindex",i===0?"0":"-1");
   b.addEventListener("click",function(){ show(t[0]); });
+  b.addEventListener("keydown",function(e){
+    var j=e.key==="ArrowRight"?(i+1)%TABS.length:e.key==="ArrowLeft"?(i+TABS.length-1)%TABS.length:e.key==="Home"?0:e.key==="End"?TABS.length-1:-1;
+    if(j<0) return; e.preventDefault(); show(TABS[j][0]); $("t-"+TABS[j][0]).focus();
+  });
   $("tabs").appendChild(b); $("p-"+t[0]).setAttribute("aria-labelledby",b.id);
 });
-function show(id){ TABS.forEach(function(t){ var on=t[0]===id; $("p-"+t[0]).hidden=!on; $("t-"+t[0]).setAttribute("aria-selected",on?"true":"false"); }); }
-function seekBtn(ms){ var b=el("button","seek",fmt(ms)); b.title="Listen from "+fmt(ms); b.addEventListener("click",function(e){ e.stopPropagation(); seek(ms); }); return b; }
+function show(id){
+  TABS.forEach(function(t){ var on=t[0]===id, b=$("t-"+t[0]); $("p-"+t[0]).hidden=!on; b.setAttribute("aria-selected",on?"true":"false"); b.setAttribute("tabindex",on?"0":"-1"); });
+  if(id==="perf"){ lastLine=null; tick(); }
+}
+/* label: the time shown (default ms); ms: where playback starts */
+function seekBtn(ms, label){ var at=label!=null?label:ms; var b=el("button","seek",fmt(at)); b.title="Listen from "+fmt(at); b.addEventListener("click",function(e){ e.stopPropagation(); seek(ms); }); return b; }
 
 /* ---------- the read ---------- */
 C.scenes.forEach(function(sc){
@@ -425,7 +477,7 @@ C.cast.forEach(function(c){
 
 /* ---------- script ---------- */
 var curScene=1, lineNodes=[];
-C.scenes.forEach(function(sc){ var b=el("button","chip",sc.n+". "+sc.title); b.setAttribute("aria-pressed",sc.n===1?"true":"false"); b.addEventListener("click",function(){ renderScene(sc.n,true); }); $("sceneChips").appendChild(b); });
+C.scenes.forEach(function(sc){ var b=el("button","chip",sc.n+". "+sc.title); b.setAttribute("aria-pressed",sc.n===1?"true":"false"); b.addEventListener("click",function(){ renderScene(sc.n,true); if($("optFollow").checked) markLines(lineAt(now())); }); $("sceneChips").appendChild(b); });
 function renderScene(n, user){
   curScene=n; var sc=C.scenes[n-1];
   Array.prototype.forEach.call($("sceneChips").children,function(b,i){ b.setAttribute("aria-pressed",i===n-1?"true":"false"); });
@@ -441,6 +493,7 @@ function renderScene(n, user){
   if(user) box.scrollTop=0;
 }
 $("optDir").addEventListener("change",function(e){ $("script").classList.toggle("nodir",!e.target.checked); });
+$("optFollow").addEventListener("change",function(e){ if(e.target.checked){ lastLine=null; tick(); } });
 renderScene(1);
 
 /* ---------- sound ---------- */
@@ -455,7 +508,7 @@ C.cues.forEach(function(c){
 /* ---------- check ---------- */
 D.qa_facts.forEach(function(r){ var tr=el("tr"); tr.appendChild(el("th",null,r[0])); var td=el("td",null,r[1]); if(r[2]) td.className=r[2]; tr.appendChild(td); $("qaFacts").appendChild(tr); });
 D.findings.forEach(function(f){
-  var tr=el("tr"); var td=el("td"); td.appendChild(seekBtn(Math.max(0,f.t-400))); tr.appendChild(td);
+  var tr=el("tr"); var td=el("td"); td.appendChild(seekBtn(Math.max(0,f.t-400),f.t)); tr.appendChild(td);
   tr.appendChild(el("td",null,f.who)); tr.appendChild(el("td",null,f.text)); tr.appendChild(el("td",null,f.heard));
   var v=el("td"); var s=el("span","verdict "+(f.kind==="word"?"bad":"warn"),f.kind==="word"?"WORD DIFFERS":"ADDED SOUND"); v.appendChild(s); tr.appendChild(v);
   $("findRows").appendChild(tr);
@@ -477,7 +530,8 @@ bars($("scaleBars"),[["Adventures in Odyssey episode, low",10000,"$10,000",1],["
     var l=el("span"); var sw=el("i","sw"); sw.style.background=cols[i]; l.appendChild(sw); l.appendChild(document.createTextNode(p[0]+" "+money(p[1])+" ("+Math.round(p[1]/tot*100)+"%)")); $("splitLegend").appendChild(l); }); })();
 
 /* ---------- catalog, audio file ---------- */
-D.catalog.forEach(function(b){ var tr=el("tr"); var td=el("td"); var a=el("a",null,b.title); a.href="https://dramatis.audio/"; a.rel="noopener"; td.appendChild(a); tr.appendChild(td);
+var BOOK_ID={"Alice's Adventures in Wonderland":"alice-in-wonderland","The Happy Prince and Other Tales":"happy-prince","The Wind in the Willows":"wind-in-the-willows","The Wonderful Wizard of Oz":"wizard-of-oz","Treasure Island":"treasure-island"};
+D.catalog.forEach(function(b){ var tr=el("tr"); var td=el("td"); var a=el("a",null,b.title); a.href="https://dramatis.audio/"+(BOOK_ID[b.title]?"#book/"+BOOK_ID[b.title]:""); a.rel="noopener"; td.appendChild(a); tr.appendChild(td);
   tr.appendChild(el("td",null,b.author)); tr.appendChild(el("td",null,b.status==="complete"?"complete":"in progress"));
   tr.appendChild(el("td","n",b.ready+" of "+b.planned)); tr.appendChild(el("td","n",b.hours.toFixed(2))); $("catRows").appendChild(tr); });
 (function(){ var tr=el("tr"); tr.appendChild(el("th",null,"Total")); tr.appendChild(el("td")); tr.appendChild(el("td"));
@@ -485,13 +539,28 @@ D.catalog.forEach(function(b){ var tr=el("tr"); var td=el("td"); var a=el("a",nu
 $("fileLine").textContent=C.audio_url.split("/").pop()+", "+C.export_bytes.toLocaleString("en-US")+" bytes, sha256 "+C.export_sha256;
 
 /* ---------- playback-linked UI ---------- */
-var lastLine=null;
-function lineAt(ms){ var lo=0, hi=LINES.length-1, best=null; while(lo<=hi){ var mid=(lo+hi)>>1; if(LINES[mid].t0<=ms){ best=LINES[mid]; lo=mid+1; } else hi=mid-1; } return best; }
+var lastLine=null, NOLINE={}, NOW0=[$("nowWho").textContent,$("nowTxt").textContent];
+/* the last line starting at or before ms; of lines sharing one take (same t0), the first, which owns the take */
+function lineAt(ms){ var lo=0, hi=LINES.length-1, best=-1; while(lo<=hi){ var mid=(lo+hi)>>1; if(LINES[mid].t0<=ms){ best=mid; lo=mid+1; } else hi=mid-1; }
+  while(best>0 && LINES[best-1].t0===LINES[best].t0) best--; return best<0?null:LINES[best]; }
+/* highlight l in the shown scene, with every line that shares its take; returns the first highlighted node */
+function markLines(l){ var first=null;
+  lineNodes.forEach(function(x){ var on=!!l && (x.line===l || (x.line.t0!=null && x.line.t0===l.t0 && !!(x.line.shared_take || l.shared_take)));
+    x.node.classList.toggle("on",on); if(on && !first) first=x.node; });
+  return first; }
 function tick(force){
   var ms = (typeof force==="number") ? force : now();
   $("head").style.left="calc(var(--lab) + (100% - var(--lab)) * "+(ms/DUR)+")";
-  $("clock").textContent=fmt(ms); if(document.activeElement!==$("scrub")) $("scrub").value=Math.round(ms/DUR*1000);
-  var l=lineAt(ms); if(!l) return;
+  $("clock").textContent=fmt(ms);
+  var sc=$("scrub"), vtxt=fmt(ms)+" of "+fmt(DUR);
+  if(!scrubHeld && Date.now()-scrubKeyAt>700) sc.value=Math.round(ms/DUR*1000);
+  if(sc.getAttribute("aria-valuetext")!==vtxt) sc.setAttribute("aria-valuetext",vtxt);
+  var l=lineAt(ms);
+  if(!l){
+    sceneNodes.forEach(function(n){ n.classList.remove("on"); });
+    if(lastLine!==NOLINE){ lastLine=NOLINE; $("nowWho").textContent=NOW0[0]; $("nowTxt").textContent=NOW0[1]; markLines(null); }
+    return;
+  }
   sceneNodes.forEach(function(n,i){ n.classList.toggle("on",i===l.scene-1); });
   if(l!==lastLine){
     lastLine=l;
@@ -499,8 +568,7 @@ function tick(force){
     $("nowTxt").textContent=l.text.replace(/\s+/g," ");
     if($("optFollow").checked && !$("p-perf").hidden){
       if(l.scene!==curScene) renderScene(l.scene);
-      lineNodes.forEach(function(x){ var on=x.line===l || (x.line.shared_take && x.line.t0===l.t0); x.node.classList.toggle("on",on);
-        if(x.line===l){ var box=$("script"); box.scrollTop=x.node.offsetTop-box.offsetTop-80; } });
+      var on=markLines(l); if(on){ var box=$("script"); box.scrollTop=on.offsetTop-box.offsetTop-80; }
     }
   }
 }
